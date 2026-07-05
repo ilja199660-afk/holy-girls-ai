@@ -587,6 +587,12 @@
         margin: -8px 0 24px;
       }
 
+      .offer-payoff {
+        color: #b8aea0;
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+
       .ticks {
         display: grid;
         gap: 12px;
@@ -906,14 +912,18 @@
           margin-left: 0;
           margin-right: 0;
           padding: 0;
+          overflow: visible;
         }
 
         .proof-photo {
           position: relative;
+          top: auto;
           left: auto;
+          right: auto;
           bottom: auto;
           width: 100%;
           min-height: 0;
+          pointer-events: auto;
         }
 
         .proof-photo::after {
@@ -925,8 +935,8 @@
 
         .proof-photo::before {
           background:
-            linear-gradient(0deg, rgba(7, 7, 7, 0.35) 0%, rgba(7, 7, 7, 0) 24%),
-            linear-gradient(90deg, rgba(7, 7, 7, 0) 0%, rgba(7, 7, 7, 0.35) 78%, #070707 100%),
+            linear-gradient(0deg, rgba(7, 7, 7, 0.28) 0%, rgba(7, 7, 7, 0) 18%),
+            linear-gradient(90deg, rgba(7, 7, 7, 0) 0%, rgba(7, 7, 7, 0.3) 82%, #070707 100%),
             url("assets/proof-hero.jpg") center top / 100% auto no-repeat,
             #070707;
         }
@@ -958,8 +968,11 @@
         }
 
         #offer {
-          padding-top: 42px;
-          scroll-margin-top: 78px;
+          padding: 32px 0 48px;
+        }
+
+        #offer-price {
+          scroll-margin-top: 84px;
         }
 
         .offer-box {
@@ -967,34 +980,57 @@
           flex-direction: column;
         }
 
-        .offer-content {
-          order: 1;
-          padding: 22px 20px 18px;
+        .offer-box img {
+          display: none;
         }
 
-        .offer-box img {
-          order: 2;
-          min-height: 0;
-          max-height: 210px;
-          object-fit: cover;
-          object-position: center 35%;
+        .offer-content {
+          order: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 18px 16px 20px;
+        }
+
+        .offer-content .eyebrow {
+          order: 1;
+          margin-bottom: 10px;
         }
 
         .offer-content h2 {
-          font-size: clamp(28px, 8vw, 40px);
-          margin-bottom: 12px;
+          order: 2;
+          font-size: clamp(26px, 7.5vw, 36px);
+          margin-bottom: 8px;
         }
 
         .offer-content .price {
-          margin: 14px 0 10px;
+          order: 3;
+          margin: 8px 0 6px;
         }
 
         .offer-content .price strong {
-          font-size: 42px;
+          font-size: 44px;
+        }
+
+        .offer-content .price-note {
+          order: 4;
+          margin: 0 0 16px;
+        }
+
+        .offer-content .offer-actions {
+          order: 5;
+          margin-bottom: 18px;
         }
 
         .offer-content .ticks {
-          margin-bottom: 18px;
+          order: 6;
+          margin-bottom: 14px;
+          gap: 10px;
+          font-size: 14px;
+        }
+
+        .offer-content .offer-payoff {
+          order: 7;
+          margin-bottom: 0;
         }
       }
 
@@ -1059,7 +1095,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#offer">Начать обучение</a>
+            <a class="button" href="#offer-price">Начать обучение</a>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1329,7 +1365,7 @@
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
-            <div class="offer-content">
+            <div class="offer-content" id="offer-price">
               <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
@@ -1344,7 +1380,7 @@
                 <li>Стратегии трафика и монетизации без своего лица</li>
                 <li>Доступ к закрытому чату учеников и обновлениям</li>
               </ul>
-              <p style="color:#b8aea0; font-size:13px; margin-bottom:24px;">
+              <p class="offer-payoff">
                 Окупается уже за 1–2 недели при первых продажах
               </p>
               <div class="offer-actions">
