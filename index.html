@@ -557,7 +557,12 @@
         background: #0c0b0b;
       }
 
-      #offer-buy,
+      .offer-scroll-marker {
+        display: block;
+        height: 0;
+        pointer-events: none;
+      }
+
       #offer-scroll {
         scroll-margin-top: 78px;
       }
@@ -799,6 +804,7 @@
 
         html {
           scroll-padding-top: 88px;
+          scroll-behavior: auto;
         }
 
         .nav {
@@ -1005,13 +1011,8 @@
           padding: 32px 0 48px;
         }
 
-        #offer-buy,
         #offer-scroll {
           scroll-margin-top: 92px;
-        }
-
-        html.in-app-browser body {
-          zoom: 1;
         }
 
         html.in-app-browser {
@@ -1409,11 +1410,12 @@
       </section>
 
       <section id="offer" class="offer">
+        <span id="offer-scroll" class="offer-scroll-marker" aria-hidden="true"></span>
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow" id="offer-scroll">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
@@ -1480,63 +1482,6 @@
       const TELEGRAM_BOT_URL = "https://t.me/aiholygirlsbot";
       document.querySelectorAll("[data-telegram-bot]").forEach((button) => {
         button.href = TELEGRAM_BOT_URL;
-      });
-
-      const isInAppBrowser = () => {
-        const ua = navigator.userAgent || "";
-        const isIOS = /iPhone|iPad|iPod/i.test(ua);
-        const isIOSInApp =
-          isIOS &&
-          /AppleWebKit/i.test(ua) &&
-          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
-
-        return (
-          isIOSInApp ||
-          /Telegram/i.test(ua) ||
-          /TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
-          /Instagram|FBAN|FBAV/i.test(ua) ||
-          /Twitter|Tweetie/i.test(ua) ||
-          /Line\//i.test(ua) ||
-          /Snapchat/i.test(ua) ||
-          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
-        );
-      };
-
-      if (isInAppBrowser()) {
-        document.documentElement.classList.add("in-app-browser");
-      }
-
-      const offerBuyTarget = document.getElementById("offer-buy");
-      const offerScrollTarget = document.getElementById("offer-scroll");
-      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
-
-      const getNavOffset = () =>
-        Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 88;
-
-      const scrollToOfferAnchor = (behavior = "auto") => {
-        if (!offerScrollTarget) return;
-
-        const top =
-          offerScrollTarget.getBoundingClientRect().top + window.pageYOffset - getNavOffset();
-        window.scrollTo({ top: Math.max(0, top), left: 0, behavior });
-      };
-
-      const scrollToOfferModule = () => {
-        if (isMobileView()) {
-          scrollToOfferAnchor(isInAppBrowser() ? "auto" : "smooth");
-          window.setTimeout(() => scrollToOfferAnchor("auto"), isInAppBrowser() ? 220 : 420);
-          return;
-        }
-
-        offerBuyTarget?.scrollIntoView({ behavior: "smooth", block: "center" });
-      };
-
-      document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
-        link.addEventListener("click", (event) => {
-          if (!isMobileView()) return;
-          event.preventDefault();
-          scrollToOfferModule();
-        });
       });
 
       const stage = document.querySelector("[data-carousel]");
