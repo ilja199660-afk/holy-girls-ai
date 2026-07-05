@@ -539,7 +539,8 @@
         background: #0c0b0b;
       }
 
-      #offer-buy {
+      #offer-buy,
+      #offer-scroll {
         scroll-margin-top: 78px;
       }
 
@@ -982,8 +983,17 @@
           padding: 32px 0 48px;
         }
 
-        #offer-buy {
+        #offer-buy,
+        #offer-scroll {
           scroll-margin-top: 92px;
+        }
+
+        html.in-app-browser body {
+          zoom: 1;
+        }
+
+        html.in-app-browser {
+          scroll-behavior: auto;
         }
 
         .offer-box {
@@ -1388,7 +1398,7 @@
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow" id="offer-scroll">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
@@ -1457,27 +1467,57 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
+      const isInAppBrowser = () => {
+        const ua = navigator.userAgent || "";
+        return (
+          /Telegram/i.test(ua) ||
+          /TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
+          /Instagram|FBAN|FBAV/i.test(ua) ||
+          /Twitter|Tweetie/i.test(ua) ||
+          /Line\//i.test(ua) ||
+          /Snapchat/i.test(ua) ||
+          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
+        );
+      };
+
+      if (isInAppBrowser()) {
+        document.documentElement.classList.add("in-app-browser");
+      }
+
       const offerBuyTarget = document.getElementById("offer-buy");
-      const offerCourseLabel = document.querySelector("#offer-price .eyebrow");
+      const offerScrollTarget =
+        document.getElementById("offer-scroll") ||
+        document.querySelector("#offer-price .eyebrow") ||
+        offerBuyTarget;
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
 
       const getScrollTop = () => window.scrollY || document.documentElement.scrollTop || 0;
 
       const snapMobileOfferView = (behavior = "auto") => {
-        const anchor = offerCourseLabel || offerBuyTarget;
-        if (!anchor) return;
+        if (!offerScrollTarget) return;
 
-        const viewport = window.visualViewport;
         const navOffset =
           Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 92;
-        const viewportOffsetTop = viewport?.offsetTop ?? 0;
-        const rect = anchor.getBoundingClientRect();
-        const top = getScrollTop() + rect.top - navOffset - viewportOffsetTop;
+        const rect = offerScrollTarget.getBoundingClientRect();
+        const top = getScrollTop() + rect.top - navOffset;
 
         window.scrollTo({ top: Math.max(0, top), behavior });
       };
 
+      const scrollToOfferInApp = () => {
+        if (!offerScrollTarget) return;
+        offerScrollTarget.scrollIntoView({ block: "start", behavior: "auto" });
+        window.setTimeout(() => {
+          offerScrollTarget.scrollIntoView({ block: "start", behavior: "auto" });
+        }, 160);
+      };
+
       const scrollToOfferModule = () => {
+        if (isInAppBrowser() && isMobileView()) {
+          scrollToOfferInApp();
+          return;
+        }
+
         if (isMobileView()) {
           snapMobileOfferView("smooth");
           window.requestAnimationFrame(() => snapMobileOfferView("auto"));
