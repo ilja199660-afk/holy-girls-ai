@@ -562,12 +562,6 @@
         background: #0c0b0b;
       }
 
-      .offer-scroll-marker {
-        display: block;
-        height: 0;
-        pointer-events: none;
-      }
-
       #offer-scroll {
         scroll-margin-top: 78px;
       }
@@ -1411,19 +1405,18 @@
       </section>
 
       <section id="offer" class="offer">
-        <span id="offer-scroll" class="offer-scroll-marker" aria-hidden="true"></span>
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow" id="offer-scroll">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
                 <s>550$</s>
               </div>
               <p class="price-note">330$ при оплате USDT</p>
-              <div class="offer-actions" id="offer-buy">
+              <div class="offer-actions">
                 <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">купить и начать</a>
                 <a class="button secondary" href="#faq">Задать вопрос</a>
               </div>
@@ -1483,42 +1476,6 @@
       const TELEGRAM_BOT_URL = "https://t.me/aiholygirlsbot";
       document.querySelectorAll("[data-telegram-bot]").forEach((button) => {
         button.href = TELEGRAM_BOT_URL;
-      });
-
-      const offerSection = document.getElementById("offer");
-      const faqLabel = document.getElementById("faq-label");
-      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
-
-      const getDocumentTop = (element) => {
-        let top = 0;
-        let node = element;
-        while (node) {
-          top += node.offsetTop || 0;
-          node = node.offsetParent;
-        }
-        return top;
-      };
-
-      const scrollToMobileOfferView = () => {
-        if (!offerSection || !faqLabel) return;
-
-        const navOffset = 88;
-        const viewportHeight = window.innerHeight;
-        const offerTop = getDocumentTop(offerSection);
-        const faqBottom = getDocumentTop(faqLabel) + faqLabel.offsetHeight;
-        const targetByFaq = faqBottom - viewportHeight;
-        const targetByOffer = offerTop - navOffset;
-        const target = Math.max(targetByOffer, targetByFaq);
-
-        window.scrollTo({ top: Math.max(0, Math.round(target)), left: 0, behavior: "auto" });
-      };
-
-      document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
-        link.addEventListener("click", (event) => {
-          if (!isMobileView()) return;
-          event.preventDefault();
-          scrollToMobileOfferView();
-        });
       });
 
       const stage = document.querySelector("[data-carousel]");
