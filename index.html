@@ -1012,6 +1012,7 @@
 
         html.in-app-browser {
           scroll-behavior: auto;
+          overflow-anchor: none;
         }
 
         .offer-box {
@@ -1477,6 +1478,59 @@
       document.querySelectorAll("[data-telegram-bot]").forEach((button) => {
         button.href = TELEGRAM_BOT_URL;
       });
+
+      const isInAppBrowser = document.documentElement.classList.contains("in-app-browser");
+      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
+      const OFFER_NAV_OFFSET = 88;
+
+      const scrollToOfferAnchor = () => {
+        const anchor = document.getElementById("offer-scroll");
+        if (!anchor) return;
+
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const y = Math.max(0, Math.round(anchor.getBoundingClientRect().top + scrollY - OFFER_NAV_OFFSET));
+
+        window.scrollTo(0, y);
+        document.documentElement.scrollTop = y;
+        document.body.scrollTop = y;
+      };
+
+      const scheduleOfferScroll = () => {
+        scrollToOfferAnchor();
+        requestAnimationFrame(scrollToOfferAnchor);
+        window.setTimeout(scrollToOfferAnchor, 120);
+        window.setTimeout(scrollToOfferAnchor, 320);
+      };
+
+      const clearOfferHash = () => {
+        history.replaceState(null, "", location.pathname + location.search);
+      };
+
+      if (isInAppBrowser) {
+        if ("scrollRestoration" in history) {
+          history.scrollRestoration = "manual";
+        }
+
+        document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
+          link.addEventListener("click", (event) => {
+            if (!isMobileView()) return;
+            event.preventDefault();
+            clearOfferHash();
+            scheduleOfferScroll();
+          });
+        });
+
+        window.addEventListener("hashchange", () => {
+          if (!isMobileView() || location.hash !== "#offer-scroll") return;
+          clearOfferHash();
+          scheduleOfferScroll();
+        });
+
+        if (isMobileView() && location.hash === "#offer-scroll") {
+          clearOfferHash();
+          scheduleOfferScroll();
+        }
+      }
 
       const stage = document.querySelector("[data-carousel]");
       if (stage) {
