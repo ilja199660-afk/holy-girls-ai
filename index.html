@@ -4,30 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Holy Girls AI</title>
-    <!-- deploy-marker: offer-top-scroll-v4 -->
-    <script>
-      (function () {
-        const ua = navigator.userAgent || "";
-        const isIOS = /iPhone|iPad|iPod/i.test(ua);
-        const isIOSInApp =
-          isIOS &&
-          /AppleWebKit/i.test(ua) &&
-          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
-
-        if (
-          /Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
-          isIOSInApp ||
-          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
-        ) {
-          document.documentElement.classList.add("in-app-browser");
-        }
-
-        if (location.hash === "#offer-top") {
-          history.replaceState(null, "", location.pathname + location.search);
-          window.__scrollOfferOnLoad = true;
-        }
-      })();
-    </script>
+    <!-- deploy-marker: offer-buttons-v5 -->
     <meta
       name="description"
       content="Holy Girls AI - cinematic AI model studio, private content concepts, visual identity and monetization funnel."
@@ -140,6 +117,15 @@
         font-weight: 800;
         text-transform: uppercase;
         font-size: 12px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      button.nav-cta,
+      button.button {
+        appearance: none;
+        -webkit-appearance: none;
+        font-family: inherit;
       }
 
       .button.secondary {
@@ -1132,7 +1118,7 @@
           <a href="#gallery">Галерея</a>
           <a href="#offer">Старт</a>
         </div>
-        <a class="nav-cta" href="#offer-top">начать курс</a>
+        <button type="button" class="nav-cta" data-scroll-offer>начать курс</button>
       </nav>
     </header>
 
@@ -1145,7 +1131,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#offer-top">Начать обучение</a>
+            <button type="button" class="button" data-scroll-offer>Начать обучение</button>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1485,47 +1471,31 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
-      const OFFER_HASH = "#offer-top";
-      const OFFER_NAV_OFFSET = 88;
-      const isInAppBrowser = document.documentElement.classList.contains("in-app-browser");
-
       const scrollToOfferTop = () => {
         const target = document.getElementById("offer-top");
         if (!target) return;
 
+        const navH = document.querySelector(".topbar")?.offsetHeight || 88;
         const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-        const y = Math.max(0, Math.round(target.getBoundingClientRect().top + scrollY - OFFER_NAV_OFFSET));
+        const y = Math.max(0, Math.round(target.getBoundingClientRect().top + scrollY - navH));
 
         window.scrollTo({ top: y, left: 0, behavior: "auto" });
       };
 
-      const scrollToOfferWithRetry = () => {
+      const goToOfferSection = () => {
+        window.dispatchEvent(new Event("pause-gallery-belt"));
         scrollToOfferTop();
-        if (!isInAppBrowser) return;
         requestAnimationFrame(scrollToOfferTop);
-        window.setTimeout(scrollToOfferTop, 120);
-        window.setTimeout(scrollToOfferTop, 350);
+        window.setTimeout(scrollToOfferTop, 100);
+        window.setTimeout(scrollToOfferTop, 300);
       };
 
-      document.addEventListener(
-        "click",
-        (event) => {
-          const link = event.target.closest(`a[href="${OFFER_HASH}"]`);
-          if (!link || !isInAppBrowser) return;
-
+      document.querySelectorAll("[data-scroll-offer]").forEach((button) => {
+        button.addEventListener("click", (event) => {
           event.preventDefault();
-          if (location.hash) {
-            history.replaceState(null, "", location.pathname + location.search);
-          }
-          window.dispatchEvent(new Event("pause-gallery-belt"));
-          scrollToOfferWithRetry();
-        },
-        true,
-      );
-
-      if (window.__scrollOfferOnLoad) {
-        scrollToOfferWithRetry();
-      }
+          goToOfferSection();
+        });
+      });
 
       const stage = document.querySelector("[data-carousel]");
       if (stage) {
