@@ -978,8 +978,8 @@
           padding: 32px 0 48px;
         }
 
-        #offer-price {
-          scroll-margin-top: 168px;
+        #offer-course {
+          scroll-margin-top: 96px;
         }
 
         .offer-box {
@@ -1100,7 +1100,7 @@
           <a href="#gallery">Галерея</a>
           <a href="#offer">Старт</a>
         </div>
-        <a class="nav-cta" href="#offer-price">начать курс</a>
+        <a class="nav-cta" href="#offer-course">начать курс</a>
       </nav>
     </header>
 
@@ -1113,7 +1113,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#offer-price">Начать обучение</a>
+            <a class="button" href="#offer-course">Начать обучение</a>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1384,7 +1384,7 @@
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow" id="offer-course">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
@@ -1453,20 +1453,16 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
-      const offerPriceTarget = document.getElementById("offer-price");
+      const offerCourseTarget = document.getElementById("offer-course");
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
-      document.querySelectorAll('a[href="#offer-price"]').forEach((link) => {
+      document.querySelectorAll('a[href="#offer-course"]').forEach((link) => {
         link.addEventListener("click", (event) => {
-          if (!offerPriceTarget || !isMobileView()) return;
+          if (!offerCourseTarget || !isMobileView()) return;
           event.preventDefault();
           const navOffset =
             Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 88;
-          const extraOffset = 72;
           const top =
-            offerPriceTarget.getBoundingClientRect().top +
-            window.scrollY -
-            navOffset +
-            extraOffset;
+            offerCourseTarget.getBoundingClientRect().top + window.scrollY - navOffset;
           window.scrollTo({ top, behavior: "smooth" });
         });
       });
