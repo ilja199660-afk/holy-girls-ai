@@ -1484,6 +1484,39 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
+      const faqLabel = document.getElementById("faq-label");
+      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
+
+      const scrollToMobileOfferView = () => {
+        if (!faqLabel) return;
+
+        const viewportHeight = window.innerHeight;
+        const maxScroll = Math.max(
+          0,
+          document.documentElement.scrollHeight - viewportHeight,
+        );
+        const faqBottom =
+          faqLabel.getBoundingClientRect().bottom + window.pageYOffset;
+        const target = Math.min(Math.max(0, faqBottom - viewportHeight), maxScroll);
+
+        window.scrollTo({ top: target, left: 0, behavior: "auto" });
+
+        window.requestAnimationFrame(() => {
+          const delta = faqLabel.getBoundingClientRect().bottom - viewportHeight;
+          if (Math.abs(delta) > 2) {
+            window.scrollBy({ top: delta, left: 0, behavior: "auto" });
+          }
+        });
+      };
+
+      document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (!isMobileView()) return;
+          event.preventDefault();
+          scrollToMobileOfferView();
+        });
+      });
+
       const stage = document.querySelector("[data-carousel]");
       if (stage) {
         const track = stage.querySelector(".model-carousel");
