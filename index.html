@@ -539,14 +539,7 @@
         background: #0c0b0b;
       }
 
-      .offer-anchor {
-        display: block;
-        width: 100%;
-        height: 0;
-        pointer-events: none;
-      }
-
-      #offer-course {
+      #offer-buy {
         scroll-margin-top: 78px;
       }
 
@@ -989,7 +982,7 @@
           padding: 32px 0 48px;
         }
 
-        #offer-course {
+        #offer-buy {
           scroll-margin-top: 92px;
         }
 
@@ -1111,7 +1104,7 @@
           <a href="#gallery">Галерея</a>
           <a href="#offer">Старт</a>
         </div>
-        <a class="nav-cta" href="#offer-course">начать курс</a>
+        <a class="nav-cta" href="#offer-buy">начать курс</a>
       </nav>
     </header>
 
@@ -1124,7 +1117,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#offer-course">Начать обучение</a>
+            <a class="button" href="#offer-buy">Начать обучение</a>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1391,7 +1384,6 @@
       </section>
 
       <section id="offer" class="offer">
-        <span id="offer-course" class="offer-anchor" aria-hidden="true"></span>
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
@@ -1413,7 +1405,7 @@
               <p class="offer-payoff">
                 Окупается уже за 1–2 недели при первых продажах
               </p>
-              <div class="offer-actions">
+              <div class="offer-actions" id="offer-buy">
                 <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">купить и начать</a>
                 <a class="button secondary" href="#faq">Задать вопрос</a>
               </div>
@@ -1465,44 +1457,38 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
-      const offerCourseTarget = document.getElementById("offer-course");
-      const faqHeading = document.getElementById("faq-label");
+      const offerBuyTarget = document.getElementById("offer-buy");
+      const offerCourseLabel = document.querySelector("#offer-price .eyebrow");
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
 
       const getScrollTop = () => window.scrollY || document.documentElement.scrollTop || 0;
 
       const snapMobileOfferView = (behavior = "auto") => {
-        if (!faqHeading) return;
+        const anchor = offerCourseLabel || offerBuyTarget;
+        if (!anchor) return;
 
         const viewport = window.visualViewport;
-        const viewportHeight = viewport?.height ?? window.innerHeight;
+        const navOffset =
+          Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 92;
         const viewportOffsetTop = viewport?.offsetTop ?? 0;
-        const faqRect = faqHeading.getBoundingClientRect();
-        const top = getScrollTop() + faqRect.bottom - viewportHeight - viewportOffsetTop;
+        const rect = anchor.getBoundingClientRect();
+        const top = getScrollTop() + rect.top - navOffset - viewportOffsetTop;
 
         window.scrollTo({ top: Math.max(0, top), behavior });
       };
 
       const scrollToOfferModule = () => {
-        if (!isMobileView()) {
-          offerCourseTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (isMobileView()) {
+          snapMobileOfferView("smooth");
+          window.requestAnimationFrame(() => snapMobileOfferView("auto"));
+          window.setTimeout(() => snapMobileOfferView("auto"), 420);
           return;
         }
 
-        snapMobileOfferView("smooth");
-
-        window.requestAnimationFrame(() => snapMobileOfferView("auto"));
-        window.setTimeout(() => snapMobileOfferView("auto"), 420);
-        window.setTimeout(() => snapMobileOfferView("auto"), 820);
-
-        if (window.visualViewport) {
-          const refine = () => snapMobileOfferView("auto");
-          window.visualViewport.addEventListener("resize", refine, { once: true });
-          window.visualViewport.addEventListener("scroll", refine, { once: true });
-        }
+        offerBuyTarget?.scrollIntoView({ behavior: "smooth", block: "center" });
       };
 
-      document.querySelectorAll('a[href="#offer-course"]').forEach((link) => {
+      document.querySelectorAll('a[href="#offer-buy"]').forEach((link) => {
         link.addEventListener("click", (event) => {
           event.preventDefault();
           scrollToOfferModule();
