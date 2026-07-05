@@ -4,16 +4,27 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Holy Girls AI</title>
+    <!-- deploy-marker: offer-top-scroll-v4 -->
     <script>
       (function () {
         const ua = navigator.userAgent || "";
-        if (/Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua)) {
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        const isIOSInApp =
+          isIOS &&
+          /AppleWebKit/i.test(ua) &&
+          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+
+        if (
+          /Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
+          isIOSInApp ||
+          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
+        ) {
           document.documentElement.classList.add("in-app-browser");
         }
 
-        if (window.matchMedia("(max-width: 860px)").matches && location.hash === "#offer-scroll") {
+        if (location.hash === "#offer-top") {
           history.replaceState(null, "", location.pathname + location.search);
-          window.__offerScrollOnLoad = true;
+          window.__scrollOfferOnLoad = true;
         }
       })();
     </script>
@@ -557,14 +568,7 @@
         background: #0c0b0b;
       }
 
-      .offer-anchor {
-        display: block;
-        height: 0;
-        overflow: hidden;
-        pointer-events: none;
-      }
-
-      #offer-scroll {
+      #offer-top {
         scroll-margin-top: 78px;
       }
 
@@ -1008,7 +1012,7 @@
           padding: 32px 0 48px;
         }
 
-        #offer-scroll {
+        #offer-top {
           scroll-margin-top: 92px;
         }
 
@@ -1128,7 +1132,7 @@
           <a href="#gallery">Галерея</a>
           <a href="#offer">Старт</a>
         </div>
-        <a class="nav-cta" href="#" data-go-offer>начать курс</a>
+        <a class="nav-cta" href="#offer-top">начать курс</a>
       </nav>
     </header>
 
@@ -1141,7 +1145,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#" data-go-offer>Начать обучение</a>
+            <a class="button" href="#offer-top">Начать обучение</a>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1408,12 +1412,11 @@
       </section>
 
       <section id="offer" class="offer">
-        <div id="offer-scroll" class="offer-anchor" aria-hidden="true"></div>
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow" id="offer-top">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
@@ -1482,51 +1485,46 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
-      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
+      const OFFER_HASH = "#offer-top";
+      const OFFER_NAV_OFFSET = 88;
+      const isInAppBrowser = document.documentElement.classList.contains("in-app-browser");
 
-      const getNavHeight = () => document.querySelector(".topbar")?.offsetHeight || 88;
-
-      let offerScrollLock = false;
-
-      const scrollToOfferView = () => {
-        const eyebrow = document.querySelector("#offer-price .eyebrow");
-        const anchor = eyebrow || document.getElementById("offer-scroll");
-        if (!anchor) return;
+      const scrollToOfferTop = () => {
+        const target = document.getElementById("offer-top");
+        if (!target) return;
 
         const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-        const y = Math.max(0, Math.round(anchor.getBoundingClientRect().top + scrollY - getNavHeight()));
+        const y = Math.max(0, Math.round(target.getBoundingClientRect().top + scrollY - OFFER_NAV_OFFSET));
 
-        window.scrollTo(0, y);
-        document.documentElement.scrollTop = y;
-        document.body.scrollTop = y;
+        window.scrollTo({ top: y, left: 0, behavior: "auto" });
       };
 
-      const scheduleOfferScroll = () => {
-        scrollToOfferView();
-        requestAnimationFrame(scrollToOfferView);
-        window.setTimeout(scrollToOfferView, 80);
-        window.setTimeout(scrollToOfferView, 200);
-        window.setTimeout(scrollToOfferView, 450);
+      const scrollToOfferWithRetry = () => {
+        scrollToOfferTop();
+        if (!isInAppBrowser) return;
+        requestAnimationFrame(scrollToOfferTop);
+        window.setTimeout(scrollToOfferTop, 120);
+        window.setTimeout(scrollToOfferTop, 350);
       };
 
-      const goToOffer = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        if (offerScrollLock) return;
-        offerScrollLock = true;
-        window.setTimeout(() => {
-          offerScrollLock = false;
-        }, 700);
-        window.dispatchEvent(new Event("pause-gallery-belt"));
-        scheduleOfferScroll();
-      };
+      document.addEventListener(
+        "click",
+        (event) => {
+          const link = event.target.closest(`a[href="${OFFER_HASH}"]`);
+          if (!link || !isInAppBrowser) return;
 
-      document.querySelectorAll("[data-go-offer]").forEach((link) => {
-        link.addEventListener("click", goToOffer, true);
-      });
+          event.preventDefault();
+          if (location.hash) {
+            history.replaceState(null, "", location.pathname + location.search);
+          }
+          window.dispatchEvent(new Event("pause-gallery-belt"));
+          scrollToOfferWithRetry();
+        },
+        true,
+      );
 
-      if (window.__offerScrollOnLoad) {
-        scheduleOfferScroll();
+      if (window.__scrollOfferOnLoad) {
+        scrollToOfferWithRetry();
       }
 
       const stage = document.querySelector("[data-carousel]");
