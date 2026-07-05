@@ -7,17 +7,7 @@
     <script>
       (function () {
         const ua = navigator.userAgent || "";
-        const isIOS = /iPhone|iPad|iPod/i.test(ua);
-        const isIOSInApp =
-          isIOS &&
-          /AppleWebKit/i.test(ua) &&
-          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
-
-        if (
-          isIOSInApp ||
-          /Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
-          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
-        ) {
+        if (/Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua)) {
           document.documentElement.classList.add("in-app-browser");
         }
       })();
@@ -1479,7 +1469,7 @@
         button.href = TELEGRAM_BOT_URL;
       });
 
-      const isInAppBrowser = document.documentElement.classList.contains("in-app-browser");
+      const isTelegramWebView = /Telegram/i.test(navigator.userAgent || "");
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
       const OFFER_NAV_OFFSET = 88;
 
@@ -1487,47 +1477,31 @@
         const anchor = document.getElementById("offer-scroll");
         if (!anchor) return;
 
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-        const y = Math.max(0, Math.round(anchor.getBoundingClientRect().top + scrollY - OFFER_NAV_OFFSET));
-
-        window.scrollTo(0, y);
-        document.documentElement.scrollTop = y;
-        document.body.scrollTop = y;
+        anchor.scrollIntoView({ block: "start", inline: "nearest", behavior: "auto" });
+        window.scrollBy(0, -OFFER_NAV_OFFSET);
       };
 
       const scheduleOfferScroll = () => {
         scrollToOfferAnchor();
         requestAnimationFrame(scrollToOfferAnchor);
-        window.setTimeout(scrollToOfferAnchor, 120);
-        window.setTimeout(scrollToOfferAnchor, 320);
+        window.setTimeout(scrollToOfferAnchor, 150);
       };
 
-      const clearOfferHash = () => {
-        history.replaceState(null, "", location.pathname + location.search);
-      };
-
-      if (isInAppBrowser) {
+      if (isTelegramWebView && isMobileView()) {
         if ("scrollRestoration" in history) {
           history.scrollRestoration = "manual";
         }
 
         document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
           link.addEventListener("click", (event) => {
-            if (!isMobileView()) return;
             event.preventDefault();
-            clearOfferHash();
+            history.replaceState(null, "", location.pathname + location.search);
             scheduleOfferScroll();
           });
         });
 
-        window.addEventListener("hashchange", () => {
-          if (!isMobileView() || location.hash !== "#offer-scroll") return;
-          clearOfferHash();
-          scheduleOfferScroll();
-        });
-
-        if (isMobileView() && location.hash === "#offer-scroll") {
-          clearOfferHash();
+        if (location.hash === "#offer-scroll") {
+          history.replaceState(null, "", location.pathname + location.search);
           scheduleOfferScroll();
         }
       }
