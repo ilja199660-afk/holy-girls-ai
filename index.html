@@ -539,6 +539,17 @@
         background: #0c0b0b;
       }
 
+      .offer-anchor {
+        display: block;
+        width: 100%;
+        height: 0;
+        pointer-events: none;
+      }
+
+      #offer-course {
+        scroll-margin-top: 78px;
+      }
+
       .offer-box {
         display: grid;
         grid-template-columns: 0.85fr 1.15fr;
@@ -979,7 +990,7 @@
         }
 
         #offer-course {
-          scroll-margin-top: 96px;
+          scroll-margin-top: 92px;
         }
 
         .offer-box {
@@ -1380,11 +1391,12 @@
       </section>
 
       <section id="offer" class="offer">
+        <span id="offer-course" class="offer-anchor" aria-hidden="true"></span>
         <div class="wrap">
           <div class="offer-box">
             <img src="assets/offer.jpg" alt="Пример результата ученика" />
             <div class="offer-content" id="offer-price">
-              <p class="eyebrow" id="offer-course">ОБУЧАЮЩИЙ КУРС</p>
+              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
               <h2>AI, который зарабатывает</h2>
               <div class="price">
                 <strong>350$</strong>
@@ -1454,16 +1466,11 @@
       });
 
       const offerCourseTarget = document.getElementById("offer-course");
-      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
       document.querySelectorAll('a[href="#offer-course"]').forEach((link) => {
         link.addEventListener("click", (event) => {
-          if (!offerCourseTarget || !isMobileView()) return;
+          if (!offerCourseTarget) return;
           event.preventDefault();
-          const navOffset =
-            Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 88;
-          const top =
-            offerCourseTarget.getBoundingClientRect().top + window.scrollY - navOffset;
-          window.scrollTo({ top, behavior: "smooth" });
+          offerCourseTarget.scrollIntoView({ behavior: "smooth", block: "start" });
         });
       });
 
