@@ -1425,7 +1425,7 @@
       <section id="faq">
         <div class="wrap">
           <div class="section-head">
-            <h2>FAQ</h2>
+            <h2 id="faq-label">FAQ</h2>
           </div>
           <div class="faq">
             <details>
@@ -1466,18 +1466,39 @@
       });
 
       const offerCourseTarget = document.getElementById("offer-course");
-      const faqHeading = document.querySelector("#faq .section-head h2");
+      const faqHeading = document.getElementById("faq-label");
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
 
+      const getScrollTop = () => window.scrollY || document.documentElement.scrollTop || 0;
+
+      const snapMobileOfferView = (behavior = "auto") => {
+        if (!faqHeading) return;
+
+        const viewport = window.visualViewport;
+        const viewportHeight = viewport?.height ?? window.innerHeight;
+        const viewportOffsetTop = viewport?.offsetTop ?? 0;
+        const faqRect = faqHeading.getBoundingClientRect();
+        const top = getScrollTop() + faqRect.bottom - viewportHeight - viewportOffsetTop;
+
+        window.scrollTo({ top: Math.max(0, top), behavior });
+      };
+
       const scrollToOfferModule = () => {
-        if (isMobileView() && faqHeading) {
-          const top =
-            faqHeading.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        if (!isMobileView()) {
+          offerCourseTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
         }
-        if (offerCourseTarget) {
-          offerCourseTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        snapMobileOfferView("smooth");
+
+        window.requestAnimationFrame(() => snapMobileOfferView("auto"));
+        window.setTimeout(() => snapMobileOfferView("auto"), 420);
+        window.setTimeout(() => snapMobileOfferView("auto"), 820);
+
+        if (window.visualViewport) {
+          const refine = () => snapMobileOfferView("auto");
+          window.visualViewport.addEventListener("resize", refine, { once: true });
+          window.visualViewport.addEventListener("scroll", refine, { once: true });
         }
       };
 
