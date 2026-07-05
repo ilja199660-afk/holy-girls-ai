@@ -770,6 +770,10 @@
       }
 
       @media (max-width: 860px) {
+        html {
+          scroll-padding-top: 88px;
+        }
+
         .nav {
           min-height: 62px;
         }
@@ -975,7 +979,7 @@
         }
 
         #offer-price {
-          scroll-margin-top: 84px;
+          scroll-margin-top: 168px;
         }
 
         .offer-box {
@@ -1447,6 +1451,24 @@
       const TELEGRAM_BOT_URL = "https://t.me/aiholygirlsbot";
       document.querySelectorAll("[data-telegram-bot]").forEach((button) => {
         button.href = TELEGRAM_BOT_URL;
+      });
+
+      const offerPriceTarget = document.getElementById("offer-price");
+      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
+      document.querySelectorAll('a[href="#offer-price"]').forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (!offerPriceTarget || !isMobileView()) return;
+          event.preventDefault();
+          const navOffset =
+            Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 88;
+          const extraOffset = 72;
+          const top =
+            offerPriceTarget.getBoundingClientRect().top +
+            window.scrollY -
+            navOffset +
+            extraOffset;
+          window.scrollTo({ top, behavior: "smooth" });
+        });
       });
 
       const stage = document.querySelector("[data-carousel]");
