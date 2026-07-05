@@ -841,17 +841,30 @@
 
         .model-carousel {
           --belt-gap: 14px;
-          --belt-card-w: min(58vw, 220px);
+          --belt-card-w: min(72vw, 280px);
           display: flex;
           flex-wrap: nowrap;
           align-items: stretch;
           gap: var(--belt-gap);
-          width: max-content;
-          height: min(78vw, 400px);
-          min-height: 360px;
+          width: 100%;
+          height: min(82vw, 420px);
+          min-height: 380px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x mandatory;
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
           perspective: none;
           transform-style: flat;
-          will-change: transform;
+          scrollbar-width: none;
+          touch-action: pan-x;
+          padding: 0 14vw 18px;
+          scroll-padding-inline: 14vw;
+        }
+
+        .model-carousel::-webkit-scrollbar {
+          display: none;
         }
 
         .model-carousel .model-card {
@@ -866,6 +879,8 @@
           filter: brightness(0.9);
           z-index: auto !important;
           pointer-events: auto !important;
+          scroll-snap-align: center;
+          scroll-snap-stop: always;
           transition: border-color 260ms ease, filter 260ms ease;
         }
 
@@ -972,14 +987,15 @@
         .offer-box img {
           order: 2;
           display: block;
-          width: min(68%, 220px);
+          width: 100%;
           height: auto;
           min-height: 0;
-          max-height: 150px;
-          margin: 4px auto 12px;
-          object-fit: contain;
-          object-position: center;
-          background: #0a0908;
+          max-height: min(62vw, 300px);
+          margin: 0;
+          object-fit: cover;
+          object-position: center top;
+          background: transparent;
+          border: 0;
         }
 
         .offer-content {
@@ -1442,10 +1458,10 @@
         const next = stage.querySelector("[data-carousel-next]");
         const count = cards.length;
         let activeIndex = 0;
-        let beltPos = 0;
         let beltPaused = false;
         let beltRaf = null;
         let beltPauseTimer = null;
+        let beltUserScrolling = false;
         const isMobileBelt = () => window.matchMedia("(max-width: 860px)").matches;
 
         cards.forEach((card, index) => {
@@ -1485,15 +1501,11 @@
           return { gap, cardW, setWidth: count * (cardW + gap) };
         };
 
-        const normalizeBeltPos = () => {
+        const normalizeBeltScroll = () => {
           const { setWidth } = getBeltMetrics();
           if (setWidth <= 0) return;
-          while (beltPos >= setWidth) beltPos -= setWidth;
-          while (beltPos < 0) beltPos += setWidth;
-        };
-
-        const applyBeltTransform = () => {
-          track.style.transform = `translate3d(-${beltPos}px, 0, 0)`;
+          if (track.scrollLeft <= 1) track.scrollLeft += setWidth;
+          if (track.scrollLeft >= setWidth * 2 - 1) track.scrollLeft -= setWidth;
         };
 
         const pauseBelt = (ms = 2400) => {
@@ -1507,17 +1519,19 @@
 
         const stepBelt = (direction) => {
           const { cardW, gap } = getBeltMetrics();
-          beltPos += direction * (cardW + gap);
-          normalizeBeltPos();
-          applyBeltTransform();
+          track.scrollBy({ left: direction * (cardW + gap), behavior: "smooth" });
           pauseBelt(2800);
         };
 
         const beltFrame = () => {
-          if (isMobileBelt() && track.classList.contains("is-belt") && !beltPaused) {
-            beltPos += 0.55;
-            normalizeBeltPos();
-            applyBeltTransform();
+          if (
+            isMobileBelt() &&
+            track.classList.contains("is-belt") &&
+            !beltPaused &&
+            !beltUserScrolling
+          ) {
+            track.scrollLeft += 0.55;
+            normalizeBeltScroll();
           }
           beltRaf = window.requestAnimationFrame(beltFrame);
         };
@@ -1529,29 +1543,42 @@
 
         const setupBeltClones = () => {
           if (track.dataset.cloned === "true") return;
+          const endFrag = document.createDocumentFragment();
+          const startFrag = document.createDocumentFragment();
           cards.forEach((card) => {
-            const clone = card.cloneNode(true);
-            clone.dataset.clone = "true";
-            clone.removeAttribute("data-index");
-            clone.classList.remove("is-active");
-            track.appendChild(clone);
+            const endClone = card.cloneNode(true);
+            endClone.dataset.clone = "true";
+            endClone.removeAttribute("data-index");
+            endClone.classList.remove("is-active");
+            endFrag.appendChild(endClone);
+
+            const startClone = card.cloneNode(true);
+            startClone.dataset.clone = "true";
+            startClone.removeAttribute("data-index");
+            startClone.classList.remove("is-active");
+            startFrag.appendChild(startClone);
           });
+          track.insertBefore(startFrag, track.firstChild);
+          track.appendChild(endFrag);
           track.dataset.cloned = "true";
+          requestAnimationFrame(() => {
+            const { setWidth } = getBeltMetrics();
+            track.scrollLeft = setWidth;
+          });
         };
 
         const stopBelt = () => {
           beltPaused = false;
+          beltUserScrolling = false;
           window.clearTimeout(beltPauseTimer);
           track.classList.remove("is-belt");
-          track.style.transform = "";
+          track.scrollLeft = 0;
           clearBeltClones();
         };
 
         const startBelt = () => {
           track.classList.add("is-belt");
           setupBeltClones();
-          beltPos = 0;
-          applyBeltTransform();
           cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === activeIndex));
         };
 
@@ -1625,36 +1652,67 @@
           setActive(activeIndex + 1);
         });
 
+        track.addEventListener(
+          "scroll",
+          () => {
+            if (!isMobileBelt() || track.dataset.cloned !== "true") return;
+            normalizeBeltScroll();
+            window.clearTimeout(track._beltSnapTimer);
+            track._beltSnapTimer = window.setTimeout(() => {
+              const trackRect = track.getBoundingClientRect();
+              const center = trackRect.left + trackRect.width / 2;
+              const closest = [...track.querySelectorAll(".model-card:not([data-clone])")].reduce(
+                (best, card, index) => {
+                  const rect = card.getBoundingClientRect();
+                  const distance = Math.abs(rect.left + rect.width / 2 - center);
+                  return distance < best.distance ? { index, distance } : best;
+                },
+                { index: activeIndex, distance: Infinity },
+              ).index;
+              setActive(closest);
+            }, 90);
+          },
+          { passive: true },
+        );
+
+        track.addEventListener(
+          "touchstart",
+          () => {
+            if (!isMobileBelt()) return;
+            beltUserScrolling = true;
+            pauseBelt(5000);
+          },
+          { passive: true },
+        );
+        track.addEventListener(
+          "touchend",
+          () => {
+            if (!isMobileBelt()) return;
+            beltUserScrolling = false;
+            pauseBelt(2200);
+          },
+          { passive: true },
+        );
+
         let startX = 0;
         let startY = 0;
-        let dragBeltPos = 0;
         track.addEventListener("pointerdown", (event) => {
+          if (isMobileBelt()) return;
           startX = event.clientX;
           startY = event.clientY;
-          dragBeltPos = beltPos;
           track.dataset.dragged = "false";
-          if (isMobileBelt()) pauseBelt(6000);
           track.setPointerCapture(event.pointerId);
         });
         track.addEventListener("pointermove", (event) => {
-          const deltaX = event.clientX - startX;
-          if (Math.abs(deltaX) > 8 || Math.abs(event.clientY - startY) > 8) {
+          if (isMobileBelt()) return;
+          if (Math.abs(event.clientX - startX) > 8 || Math.abs(event.clientY - startY) > 8) {
             track.dataset.dragged = "true";
-          }
-          if (isMobileBelt() && track.dataset.dragged === "true") {
-            beltPos = dragBeltPos - deltaX;
-            normalizeBeltPos();
-            applyBeltTransform();
           }
         });
         track.addEventListener("pointerup", (event) => {
+          if (isMobileBelt()) return;
           const delta = event.clientX - startX;
-          if (isMobileBelt()) {
-            if (Math.abs(delta) > 40) stepBelt(delta < 0 ? 1 : -1);
-            else pauseBelt(1800);
-          } else if (Math.abs(delta) > 40) {
-            setActive(activeIndex + (delta < 0 ? 1 : -1));
-          }
+          if (Math.abs(delta) > 40) setActive(activeIndex + (delta < 0 ? 1 : -1));
           requestAnimationFrame(() => {
             track.dataset.dragged = "false";
           });
