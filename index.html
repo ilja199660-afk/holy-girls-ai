@@ -1466,11 +1466,25 @@
       });
 
       const offerCourseTarget = document.getElementById("offer-course");
+      const faqHeading = document.querySelector("#faq .section-head h2");
+      const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
+
+      const scrollToOfferModule = () => {
+        if (isMobileView() && faqHeading) {
+          const top =
+            faqHeading.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          return;
+        }
+        if (offerCourseTarget) {
+          offerCourseTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      };
+
       document.querySelectorAll('a[href="#offer-course"]').forEach((link) => {
         link.addEventListener("click", (event) => {
-          if (!offerCourseTarget) return;
           event.preventDefault();
-          offerCourseTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+          scrollToOfferModule();
         });
       });
 
