@@ -840,15 +840,37 @@
         }
 
         .model-carousel {
-          --card-w: min(62vw, 250px);
-          --orbit-x: 0.36;
-          --orbit-y: 0.14;
-          --orbit-y-offset: 36px;
-          height: clamp(440px, 78vw, 560px);
+          --belt-gap: 14px;
+          --belt-card-w: min(58vw, 220px);
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: stretch;
+          gap: var(--belt-gap);
+          width: max-content;
+          height: min(78vw, 400px);
+          min-height: 360px;
+          perspective: none;
+          transform-style: flat;
+          will-change: transform;
         }
 
-        .model-card {
-          height: clamp(280px, 68vw, 420px);
+        .model-carousel .model-card {
+          position: relative;
+          left: auto;
+          top: auto;
+          flex: 0 0 var(--belt-card-w);
+          width: var(--belt-card-w);
+          height: 100%;
+          transform: none !important;
+          opacity: 1 !important;
+          filter: brightness(0.9);
+          z-index: auto !important;
+          pointer-events: auto !important;
+          transition: border-color 260ms ease, filter 260ms ease;
+        }
+
+        .model-carousel .model-card.is-active {
+          filter: brightness(1);
         }
 
         .model-stage {
@@ -865,14 +887,6 @@
         }
 
         .model-dots {
-          max-width: calc(100vw - 36px);
-          margin: 40px auto 0;
-          overflow-x: auto;
-          padding-bottom: 4px;
-          scrollbar-width: none;
-        }
-
-        .model-dots::-webkit-scrollbar {
           display: none;
         }
 
@@ -958,10 +972,11 @@
         .offer-box img {
           order: 2;
           display: block;
-          width: 100%;
+          width: min(68%, 220px);
           height: auto;
           min-height: 0;
-          max-height: none;
+          max-height: 150px;
+          margin: 4px auto 12px;
           object-fit: contain;
           object-position: center;
           background: #0a0908;
@@ -1427,18 +1442,28 @@
       const stage = document.querySelector("[data-carousel]");
       if (stage) {
         const track = stage.querySelector(".model-carousel");
-        const cards = [...stage.querySelectorAll(".model-card")];
+        const cards = [...track.querySelectorAll(".model-card:not([data-clone])")];
         const dotsWrap = stage.querySelector(".model-dots");
         const prev = stage.querySelector("[data-carousel-prev]");
         const next = stage.querySelector("[data-carousel-next]");
         const count = cards.length;
         let activeIndex = 0;
+        let beltPos = 0;
+        let beltPaused = false;
+        let beltRaf = null;
+        let beltPauseTimer = null;
+        const isMobileBelt = () => window.matchMedia("(max-width: 860px)").matches;
+
         cards.forEach((card, index) => {
-          card.dataset.index = index;
+          card.dataset.index = String(index);
           card.addEventListener("click", (event) => {
             if (track.dataset.dragged === "true") return;
             event.stopPropagation();
-            setActive(index);
+            if (isMobileBelt()) {
+              pauseBelt(2600);
+            } else {
+              setActive(index);
+            }
           });
 
           const dot = document.createElement("button");
@@ -1458,8 +1483,92 @@
           return offset;
         };
 
+        const getBeltMetrics = () => {
+          const computed = getComputedStyle(track);
+          const gap = Number.parseFloat(computed.getPropertyValue("--belt-gap")) || 14;
+          const card = track.querySelector(".model-card:not([data-clone])");
+          const cardW = card?.offsetWidth || 220;
+          return { gap, cardW, setWidth: count * (cardW + gap) };
+        };
+
+        const normalizeBeltPos = () => {
+          const { setWidth } = getBeltMetrics();
+          if (setWidth <= 0) return;
+          while (beltPos >= setWidth) beltPos -= setWidth;
+          while (beltPos < 0) beltPos += setWidth;
+        };
+
+        const applyBeltTransform = () => {
+          track.style.transform = `translate3d(-${beltPos}px, 0, 0)`;
+        };
+
+        const pauseBelt = (ms = 2400) => {
+          if (!isMobileBelt()) return;
+          beltPaused = true;
+          window.clearTimeout(beltPauseTimer);
+          beltPauseTimer = window.setTimeout(() => {
+            beltPaused = false;
+          }, ms);
+        };
+
+        const stepBelt = (direction) => {
+          const { cardW, gap } = getBeltMetrics();
+          beltPos += direction * (cardW + gap);
+          normalizeBeltPos();
+          applyBeltTransform();
+          pauseBelt(2800);
+        };
+
+        const beltFrame = () => {
+          if (isMobileBelt() && track.classList.contains("is-belt") && !beltPaused) {
+            beltPos += 0.55;
+            normalizeBeltPos();
+            applyBeltTransform();
+          }
+          beltRaf = window.requestAnimationFrame(beltFrame);
+        };
+
+        const clearBeltClones = () => {
+          track.querySelectorAll(".model-card[data-clone]").forEach((clone) => clone.remove());
+          track.dataset.cloned = "false";
+        };
+
+        const setupBeltClones = () => {
+          if (track.dataset.cloned === "true") return;
+          cards.forEach((card) => {
+            const clone = card.cloneNode(true);
+            clone.dataset.clone = "true";
+            clone.removeAttribute("data-index");
+            clone.classList.remove("is-active");
+            track.appendChild(clone);
+          });
+          track.dataset.cloned = "true";
+        };
+
+        const stopBelt = () => {
+          beltPaused = false;
+          window.clearTimeout(beltPauseTimer);
+          track.classList.remove("is-belt");
+          track.style.transform = "";
+          clearBeltClones();
+        };
+
+        const startBelt = () => {
+          track.classList.add("is-belt");
+          setupBeltClones();
+          beltPos = 0;
+          applyBeltTransform();
+          cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === activeIndex));
+        };
+
         const setActive = (index) => {
           activeIndex = (index + count) % count;
+
+          if (isMobileBelt()) {
+            cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === activeIndex));
+            dots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === activeIndex));
+            return;
+          }
 
           const computed = getComputedStyle(track);
           const orbitX = Number.parseFloat(computed.getPropertyValue("--orbit-x")) || 0.45;
@@ -1469,8 +1578,6 @@
           cards.forEach((card, cardIndex) => {
             const offset = circularOffset(cardIndex);
             const distance = Math.abs(offset);
-            const side = Math.sign(offset);
-            const visible = true;
             const angle = (offset / count) * Math.PI * 2;
             const radiusX = Math.min(track.clientWidth * orbitX, 840);
             const radiusY = Math.min(track.clientHeight * orbitY, 125);
@@ -1493,38 +1600,75 @@
             card.style.setProperty("--o", opacity.toFixed(3));
             card.style.setProperty("--b", brightness.toFixed(3));
             card.style.setProperty("--zi", zIndex);
-            card.style.setProperty("--pe", visible ? "auto" : "none");
+            card.style.setProperty("--pe", "auto");
           });
 
           dots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === activeIndex));
         };
 
-        prev.addEventListener("click", () => setActive(activeIndex - 1));
-        next.addEventListener("click", () => setActive(activeIndex + 1));
+        const applyMode = () => {
+          if (isMobileBelt()) {
+            startBelt();
+            setActive(activeIndex);
+          } else {
+            stopBelt();
+            setActive(activeIndex);
+          }
+        };
+
+        prev.addEventListener("click", () => {
+          if (isMobileBelt()) {
+            stepBelt(-1);
+            return;
+          }
+          setActive(activeIndex - 1);
+        });
+        next.addEventListener("click", () => {
+          if (isMobileBelt()) {
+            stepBelt(1);
+            return;
+          }
+          setActive(activeIndex + 1);
+        });
 
         let startX = 0;
         let startY = 0;
+        let dragBeltPos = 0;
         track.addEventListener("pointerdown", (event) => {
           startX = event.clientX;
           startY = event.clientY;
+          dragBeltPos = beltPos;
           track.dataset.dragged = "false";
+          if (isMobileBelt()) pauseBelt(6000);
           track.setPointerCapture(event.pointerId);
         });
         track.addEventListener("pointermove", (event) => {
-          if (Math.abs(event.clientX - startX) > 8 || Math.abs(event.clientY - startY) > 8) {
+          const deltaX = event.clientX - startX;
+          if (Math.abs(deltaX) > 8 || Math.abs(event.clientY - startY) > 8) {
             track.dataset.dragged = "true";
+          }
+          if (isMobileBelt() && track.dataset.dragged === "true") {
+            beltPos = dragBeltPos - deltaX;
+            normalizeBeltPos();
+            applyBeltTransform();
           }
         });
         track.addEventListener("pointerup", (event) => {
           const delta = event.clientX - startX;
-          if (Math.abs(delta) > 40) setActive(activeIndex + (delta < 0 ? 1 : -1));
+          if (isMobileBelt()) {
+            if (Math.abs(delta) > 40) stepBelt(delta < 0 ? 1 : -1);
+            else pauseBelt(1800);
+          } else if (Math.abs(delta) > 40) {
+            setActive(activeIndex + (delta < 0 ? 1 : -1));
+          }
           requestAnimationFrame(() => {
             track.dataset.dragged = "false";
           });
         });
 
-        setActive(0);
-        window.addEventListener("resize", () => setActive(activeIndex));
+        applyMode();
+        beltRaf = window.requestAnimationFrame(beltFrame);
+        window.addEventListener("resize", applyMode);
       }
     </script>
   </body>
