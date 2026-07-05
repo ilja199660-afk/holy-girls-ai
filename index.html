@@ -4,6 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Holy Girls AI</title>
+    <script>
+      (function () {
+        const ua = navigator.userAgent || "";
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        const isIOSInApp =
+          isIOS &&
+          /AppleWebKit/i.test(ua) &&
+          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+
+        if (
+          isIOSInApp ||
+          /Telegram|TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
+          (/Android/i.test(ua) && /;\s*wv\)/i.test(ua))
+        ) {
+          document.documentElement.classList.add("in-app-browser");
+        }
+      })();
+    </script>
     <meta
       name="description"
       content="Holy Girls AI - cinematic AI model studio, private content concepts, visual identity and monetization funnel."
@@ -775,6 +793,10 @@
       }
 
       @media (max-width: 860px) {
+        body {
+          zoom: 1;
+        }
+
         html {
           scroll-padding-top: 88px;
         }
@@ -1024,18 +1046,15 @@
         }
 
         .offer-content .eyebrow {
-          order: 1;
           margin-bottom: 10px;
         }
 
         .offer-content h2 {
-          order: 2;
           font-size: clamp(26px, 7.5vw, 36px);
           margin-bottom: 8px;
         }
 
         .offer-content .price {
-          order: 3;
           margin: 8px 0 6px;
         }
 
@@ -1044,24 +1063,20 @@
         }
 
         .offer-content .price-note {
-          order: 4;
           margin: 0 0 16px;
         }
 
         .offer-content .offer-actions {
-          order: 5;
           margin-bottom: 18px;
         }
 
         .offer-content .ticks {
-          order: 6;
           margin-bottom: 14px;
           gap: 10px;
           font-size: 14px;
         }
 
         .offer-content .offer-payoff {
-          order: 7;
           margin-bottom: 0;
         }
       }
@@ -1114,7 +1129,7 @@
           <a href="#gallery">Галерея</a>
           <a href="#offer">Старт</a>
         </div>
-        <a class="nav-cta" href="#offer-buy">начать курс</a>
+        <a class="nav-cta" href="#offer-scroll">начать курс</a>
       </nav>
     </header>
 
@@ -1127,7 +1142,7 @@
             Первые результаты уже в первый месяц.
           </p>
           <div class="hero-actions">
-            <a class="button" href="#offer-buy">Начать обучение</a>
+            <a class="button" href="#offer-scroll">Начать обучение</a>
             <a class="button secondary" href="#gallery">Посмотреть примеры</a>
           </div>
         </div>
@@ -1405,6 +1420,10 @@
                 <s>550$</s>
               </div>
               <p class="price-note">330$ при оплате USDT</p>
+              <div class="offer-actions" id="offer-buy">
+                <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">купить и начать</a>
+                <a class="button secondary" href="#faq">Задать вопрос</a>
+              </div>
               <ul class="ticks">
                 <li>Более 20 уроков, обновлённых в июле 2026 года</li>
                 <li>промты для seedance 2.0 связка с Nano Banana</li>
@@ -1415,10 +1434,6 @@
               <p class="offer-payoff">
                 Окупается уже за 1–2 недели при первых продажах
               </p>
-              <div class="offer-actions" id="offer-buy">
-                <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">купить и начать</a>
-                <a class="button secondary" href="#faq">Задать вопрос</a>
-              </div>
             </div>
           </div>
         </div>
@@ -1469,7 +1484,14 @@
 
       const isInAppBrowser = () => {
         const ua = navigator.userAgent || "";
+        const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        const isIOSInApp =
+          isIOS &&
+          /AppleWebKit/i.test(ua) &&
+          !/Safari|CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+
         return (
+          isIOSInApp ||
           /Telegram/i.test(ua) ||
           /TikTok|musical_ly|BytedanceWebview/i.test(ua) ||
           /Instagram|FBAN|FBAV/i.test(ua) ||
@@ -1485,51 +1507,33 @@
       }
 
       const offerBuyTarget = document.getElementById("offer-buy");
-      const offerScrollTarget =
-        document.getElementById("offer-scroll") ||
-        document.querySelector("#offer-price .eyebrow") ||
-        offerBuyTarget;
+      const offerScrollTarget = document.getElementById("offer-scroll");
       const isMobileView = () => window.matchMedia("(max-width: 860px)").matches;
 
-      const getScrollTop = () => window.scrollY || document.documentElement.scrollTop || 0;
+      const getNavOffset = () =>
+        Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 88;
 
-      const snapMobileOfferView = (behavior = "auto") => {
+      const scrollToOfferAnchor = (behavior = "auto") => {
         if (!offerScrollTarget) return;
 
-        const navOffset =
-          Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 92;
-        const rect = offerScrollTarget.getBoundingClientRect();
-        const top = getScrollTop() + rect.top - navOffset;
-
-        window.scrollTo({ top: Math.max(0, top), behavior });
-      };
-
-      const scrollToOfferInApp = () => {
-        if (!offerScrollTarget) return;
-        offerScrollTarget.scrollIntoView({ block: "start", behavior: "auto" });
-        window.setTimeout(() => {
-          offerScrollTarget.scrollIntoView({ block: "start", behavior: "auto" });
-        }, 160);
+        const top =
+          offerScrollTarget.getBoundingClientRect().top + window.pageYOffset - getNavOffset();
+        window.scrollTo({ top: Math.max(0, top), left: 0, behavior });
       };
 
       const scrollToOfferModule = () => {
-        if (isInAppBrowser() && isMobileView()) {
-          scrollToOfferInApp();
-          return;
-        }
-
         if (isMobileView()) {
-          snapMobileOfferView("smooth");
-          window.requestAnimationFrame(() => snapMobileOfferView("auto"));
-          window.setTimeout(() => snapMobileOfferView("auto"), 420);
+          scrollToOfferAnchor(isInAppBrowser() ? "auto" : "smooth");
+          window.setTimeout(() => scrollToOfferAnchor("auto"), isInAppBrowser() ? 220 : 420);
           return;
         }
 
         offerBuyTarget?.scrollIntoView({ behavior: "smooth", block: "center" });
       };
 
-      document.querySelectorAll('a[href="#offer-buy"]').forEach((link) => {
+      document.querySelectorAll('a[href="#offer-scroll"]').forEach((link) => {
         link.addEventListener("click", (event) => {
+          if (!isMobileView()) return;
           event.preventDefault();
           scrollToOfferModule();
         });
