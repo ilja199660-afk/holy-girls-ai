@@ -1,0 +1,1552 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Holy Girls AI</title>
+    <meta
+      name="description"
+      content="Holy Girls AI - cinematic AI model studio, private content concepts, visual identity and monetization funnel."
+    />
+    <style>
+      :root {
+        --bg: #070707;
+        --ink: #f7f1e8;
+        --muted: #b8aea0;
+        --line: rgba(247, 241, 232, 0.16);
+        --gold: #d5a64f;
+        --red: #9f1f2e;
+        --panel: #11100f;
+        --panel-2: #181513;
+        --max: 1080px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 78px;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        letter-spacing: 0;
+        zoom: 0.82;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .topbar {
+        position: fixed;
+        z-index: 20;
+        top: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(7, 7, 7, 0.68);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav {
+        width: min(var(--max), calc(100% - 32px));
+        min-height: 68px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 23px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .brand span {
+        color: var(--gold);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      .nav-links a:hover {
+        color: var(--ink);
+      }
+
+      .nav-cta,
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(213, 166, 79, 0.55);
+        background: var(--gold);
+        color: #160f08;
+        padding: 0 18px;
+        border-radius: 999px;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 12px;
+      }
+
+      .button.secondary {
+        background: transparent;
+        color: var(--ink);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .button.buy {
+        background: #1faa55;
+        border-color: rgba(31, 170, 85, 0.75);
+        color: #f7f1e8;
+      }
+
+      .button.buy:hover {
+        background: #26c463;
+        border-color: #26c463;
+      }
+
+      .hero {
+        min-height: 96vh;
+        position: relative;
+        display: grid;
+        align-items: end;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          linear-gradient(90deg, rgba(7, 7, 7, 0.9) 0%, rgba(7, 7, 7, 0.38) 34%, rgba(7, 7, 7, 0.18) 100%),
+          linear-gradient(0deg, #070707 0%, rgba(7, 7, 7, 0.12) 28%, rgba(7, 7, 7, 0.02) 100%),
+          radial-gradient(circle at 50% 42%, rgba(0, 0, 0, 0) 0 38%, rgba(0, 0, 0, 0.28) 68%, rgba(0, 0, 0, 0.62) 100%),
+          url("assets/hero.jpg") center center / min(100vw, 1840px) auto no-repeat,
+          linear-gradient(90deg, #080506 0%, #29050a 24%, #710914 50%, #3a070c 76%, #080506 100%);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(0, 0, 0, 0.74) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 78%, rgba(0, 0, 0, 0.72) 100%),
+          linear-gradient(0deg, #070707 0%, rgba(7, 7, 7, 0) 38%);
+      }
+
+      .hero-inner {
+        width: min(var(--max), calc(100% - 32px));
+        margin: 0 auto;
+        padding: 90px 0 60px;
+      }
+
+      .eyebrow {
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: 0 0 18px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(25px, 4.5vw, 59px);
+        line-height: 0.88;
+        margin-bottom: 18px;
+        text-transform: uppercase;
+        text-wrap: balance;
+      }
+
+      .h1-top {
+        display: block;
+        font-size: clamp(17px, 3vw, 38px);
+        margin-bottom: 0.14em;
+      }
+
+      .h1-main {
+        display: block;
+      }
+
+      .lead {
+        max-width: 520px;
+        color: var(--muted);
+        font-size: clamp(18px, 2vw, 24px);
+        line-height: 1.45;
+        margin-bottom: 34px;
+      }
+
+      .hero-actions,
+      .offer-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .stats {
+        width: min(var(--max), calc(100% - 32px));
+        margin: -40px auto 0;
+        position: relative;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 1px solid var(--line);
+        background: rgba(17, 16, 15, 0.86);
+        backdrop-filter: blur(18px);
+      }
+
+      .stat {
+        padding: 28px;
+        border-right: 1px solid var(--line);
+      }
+
+      .stat:last-child {
+        border-right: 0;
+      }
+
+      .stat strong {
+        display: block;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 42px;
+        color: var(--gold);
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      section {
+        padding: 82px 0;
+      }
+
+      .wrap {
+        width: min(var(--max), calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 60px;
+        align-items: center;
+        margin-bottom: 48px;
+      }
+
+      .section-head h2,
+      .section-head p {
+        margin: 0;
+      }
+
+      h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(34px, 5.4vw, 66px);
+        line-height: 0.96;
+        text-transform: uppercase;
+      }
+
+      .section-head p,
+      .text-block p,
+      .step p,
+      .faq-body {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .card {
+        min-height: 270px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        padding: 26px;
+        border-radius: 8px;
+      }
+
+      .card-num {
+        color: var(--gold);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 56px;
+        line-height: 1;
+        margin-bottom: 42px;
+      }
+
+      .card h3,
+      .step h3 {
+        font-size: 19px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 36px;
+        align-items: center;
+      }
+
+      .portrait-stack {
+        display: block;
+      }
+
+      .portrait {
+        width: 100%;
+        aspect-ratio: 4 / 5.6;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+
+      .brand-shot {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+        aspect-ratio: 9 / 16;
+        object-fit: contain;
+        background: #0d0d0c;
+        border-radius: 8px;
+        border: 1px solid rgba(213, 166, 79, 0.22);
+      }
+
+      .portrait.small {
+        aspect-ratio: 4 / 5.1;
+        margin-bottom: 54px;
+      }
+
+      .text-block {
+        max-width: 620px;
+      }
+
+      .text-block h2 {
+        margin-bottom: 24px;
+      }
+
+      .steps {
+        display: grid;
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 78px 1fr;
+        gap: 18px;
+        align-items: center;
+        background: var(--bg);
+        padding: 20px;
+      }
+
+      .step-number {
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--gold);
+        font-size: 38px;
+      }
+
+      .step-tag {
+        color: var(--muted);
+        text-align: right;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      .model-stage {
+        margin-left: calc((100vw - min(var(--max), calc(100vw - 32px))) / -2);
+        margin-right: calc((100vw - min(var(--max), calc(100vw - 32px))) / -2);
+      }
+
+      .model-toolbar {
+        width: min(var(--max), calc(100% - 32px));
+        margin: 88px auto -66px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        position: relative;
+        z-index: 40;
+      }
+
+      .icon-button {
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .icon-button:hover {
+        border-color: rgba(213, 166, 79, 0.65);
+        color: var(--gold);
+      }
+
+      .model-carousel {
+        --card-w: clamp(170px, 14.5vw, 270px);
+        --orbit-x: 0.45;
+        --orbit-y: 0.16;
+        --orbit-y-offset: 48px;
+        position: relative;
+        height: clamp(540px, 46vw, 640px);
+        overflow: hidden;
+        perspective: 1100px;
+        transform-style: preserve-3d;
+        user-select: none;
+      }
+
+      .model-card {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: var(--card-w);
+        height: clamp(300px, 25.2vw, 480px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #111;
+        cursor: pointer;
+        transform: translate(-50%, -50%) translateX(var(--x, 0px)) translateY(var(--y, 0px)) translateZ(var(--z, 0px)) rotateY(var(--r, 0deg)) scale(var(--s, 1));
+        opacity: var(--o, 0);
+        z-index: var(--zi, 1);
+        transition:
+          transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 420ms ease,
+          border-color 260ms ease,
+          filter 420ms ease;
+        filter: brightness(var(--b, 0.58));
+        pointer-events: var(--pe, none);
+      }
+
+      .model-card.is-active,
+      .model-card:hover {
+        border-color: rgba(213, 166, 79, 0.6);
+      }
+
+      .model-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .model-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 48%, rgba(0, 0, 0, 0.76) 100%);
+      }
+
+      .model-caption {
+        position: absolute;
+        z-index: 2;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: end;
+      }
+
+      .model-caption strong {
+        display: block;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      .model-caption span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .model-chip {
+        flex: 0 0 auto;
+        color: #190e08;
+        background: var(--gold);
+        border-radius: 999px;
+        padding: 6px 9px;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .model-dots {
+        display: flex;
+        justify-content: center;
+        gap: 9px;
+        margin-top: 56px;
+        position: relative;
+        z-index: 30;
+      }
+
+      .model-dot {
+        width: 10px;
+        height: 10px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+      }
+
+      .model-dot.is-active {
+        width: 28px;
+        border-radius: 999px;
+        background: #d00018;
+      }
+
+      .offer {
+        background: #0c0b0b;
+      }
+
+      .offer-box {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 28px;
+        border: 1px solid rgba(213, 166, 79, 0.28);
+        background: linear-gradient(135deg, rgba(213, 166, 79, 0.08), rgba(159, 31, 46, 0.1)), var(--panel);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .offer-box img {
+        width: 100%;
+        height: 100%;
+        min-height: 440px;
+        object-fit: cover;
+      }
+
+      .offer-content {
+        padding: 36px 38px 36px 6px;
+        align-self: center;
+      }
+
+      .price {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin: 24px 0;
+      }
+
+      .price strong {
+        color: var(--gold);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 56px;
+        line-height: 1;
+      }
+
+      .price s {
+        color: #786d61;
+        font-size: 30px;
+      }
+
+      .price-note {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 600;
+        margin: -8px 0 24px;
+      }
+
+      .ticks {
+        display: grid;
+        gap: 12px;
+        color: var(--muted);
+        margin: 0 0 30px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .ticks li {
+        position: relative;
+        padding-left: 28px;
+        line-height: 1.5;
+      }
+
+      .ticks li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .proof-layout {
+        position: relative;
+        margin-left: calc((100vw - min(var(--max), calc(100vw - 32px))) / -2);
+        margin-right: calc((100vw - min(var(--max), calc(100vw - 32px))) / -2);
+        padding: 0 calc((100vw - min(var(--max), calc(100vw - 32px))) / 2) 12px;
+        overflow: hidden;
+      }
+
+      .proof-photo {
+        position: absolute;
+        left: calc((100vw - min(var(--max), calc(100vw - 32px))) / 2);
+        top: 0;
+        bottom: 0;
+        width: min(42vw, 470px);
+        border: 0;
+        border-radius: 0;
+        overflow: hidden;
+        isolation: isolate;
+        background: #070707;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .proof-photo::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+          linear-gradient(90deg, rgba(7, 7, 7, 0) 0%, rgba(7, 7, 7, 0.08) 42%, rgba(7, 7, 7, 0.55) 68%, #070707 88%),
+          url("assets/proof-hero.jpg") center top / 100% auto no-repeat,
+          #070707;
+      }
+
+      .proof-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .proof-layout .proof-grid {
+        position: relative;
+        z-index: 2;
+        margin-left: min(36vw, 410px);
+        width: calc(100% - min(28vw, 330px));
+        padding-top: 8px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .proof-layout .proof-card {
+        padding: 8px;
+      }
+
+      .proof-layout .proof-card img {
+        max-height: 240px;
+      }
+
+      .proof-layout .proof-card figcaption {
+        font-size: 11px;
+        padding: 10px 2px 2px;
+        line-height: 1.4;
+      }
+
+      .proof-card {
+        border: 1px solid var(--line);
+        background: var(--panel-2);
+        border-radius: 8px;
+        padding: 10px;
+        overflow: hidden;
+      }
+
+      .proof-card img {
+        width: 100%;
+        max-height: 520px;
+        object-fit: contain;
+        background: #0a0a0a;
+        border-radius: 6px;
+      }
+
+      .proof-card figcaption {
+        color: var(--gold);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 12px 4px 4px;
+      }
+
+      .faq {
+        display: grid;
+        gap: 10px;
+      }
+
+      details {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 8px;
+        padding: 20px 22px;
+      }
+
+      summary {
+        cursor: pointer;
+        list-style: none;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .faq-body {
+        padding-top: 16px;
+      }
+
+      .final {
+        position: relative;
+        min-height: 64vh;
+        display: grid;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .final::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+          linear-gradient(90deg, #070707 0%, rgba(7, 7, 7, 0.75) 45%, rgba(7, 7, 7, 0.25) 100%),
+          url("assets/final.jpg") center / cover no-repeat;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        padding: 30px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer-inner {
+        width: min(var(--max), calc(100% - 32px));
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 860px) {
+        .nav {
+          min-height: 62px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hero {
+          min-height: 92vh;
+        }
+
+        .hero::before {
+          background:
+            linear-gradient(0deg, #070707 0%, rgba(7, 7, 7, 0.32) 38%, rgba(7, 7, 7, 0.02) 100%),
+            radial-gradient(circle at 50% 34%, rgba(0, 0, 0, 0) 0 35%, rgba(0, 0, 0, 0.48) 78%, rgba(0, 0, 0, 0.78) 100%),
+            url("assets/hero.jpg") center 18% / auto 72vh no-repeat,
+            linear-gradient(90deg, #080506 0%, #29050a 24%, #710914 50%, #3a070c 76%, #080506 100%);
+        }
+
+        .hero-inner {
+          padding: 92px 0 58px;
+        }
+
+        .stats,
+        .cards,
+        .split,
+        .section-head,
+        .offer-box,
+        .proof-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          margin-top: 0;
+        }
+
+        .stat {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .stat:last-child {
+          border-bottom: 0;
+        }
+
+        section {
+          padding: 58px 0;
+        }
+
+        .section-head {
+          gap: 18px;
+          margin-bottom: 28px;
+        }
+
+        .brand-shot {
+          max-width: min(340px, 100%);
+          aspect-ratio: 9 / 16;
+        }
+
+        .step {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .step-tag {
+          text-align: left;
+        }
+
+        .model-carousel {
+          --card-w: min(72vw, 280px);
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: var(--card-w);
+          gap: 16px;
+          height: auto;
+          min-height: 430px;
+          left: 50%;
+          width: 100vw;
+          transform: translateX(-50%);
+          overflow-x: auto;
+          overflow-y: visible;
+          scroll-snap-type: x mandatory;
+          scroll-padding-inline: 14vw;
+          padding: 8px 14vw 18px;
+          perspective: none;
+          scrollbar-width: none;
+        }
+
+        .model-carousel::-webkit-scrollbar {
+          display: none;
+        }
+
+        .model-card {
+          position: relative;
+          left: auto;
+          top: auto;
+          width: var(--card-w);
+          height: min(96vw, 430px);
+          transform: none !important;
+          opacity: 1 !important;
+          filter: brightness(0.72);
+          z-index: auto !important;
+          pointer-events: auto !important;
+          scroll-snap-align: center;
+          flex: 0 0 auto;
+        }
+
+        .model-card.is-active {
+          filter: brightness(1);
+        }
+
+        .model-stage {
+          margin-left: 0;
+          margin-right: 0;
+          overflow: hidden;
+        }
+
+        .model-toolbar {
+          width: calc(100% - 32px);
+          margin: 18px auto 14px;
+          padding-right: 0;
+          justify-content: flex-end;
+        }
+
+        .model-dots {
+          max-width: calc(100vw - 36px);
+          margin: 40px auto 0;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scrollbar-width: none;
+        }
+
+        .model-dots::-webkit-scrollbar {
+          display: none;
+        }
+
+        .proof-layout {
+          min-height: 0;
+          margin-left: 0;
+          margin-right: 0;
+          padding: 0;
+        }
+
+        .proof-photo {
+          position: relative;
+          left: auto;
+          bottom: auto;
+          width: 100%;
+          min-height: 0;
+        }
+
+        .proof-photo::after {
+          content: "";
+          display: block;
+          width: 100%;
+          aspect-ratio: 1536 / 2752;
+        }
+
+        .proof-photo::before {
+          background:
+            linear-gradient(0deg, rgba(7, 7, 7, 0.35) 0%, rgba(7, 7, 7, 0) 24%),
+            linear-gradient(90deg, rgba(7, 7, 7, 0) 0%, rgba(7, 7, 7, 0.35) 78%, #070707 100%),
+            url("assets/proof-hero.jpg") center top / 100% auto no-repeat,
+            #070707;
+        }
+
+        .proof-layout .proof-grid {
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: min(72vw, 300px);
+          grid-template-columns: none;
+          gap: 14px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding: 2px 16px 18px;
+          margin: 16px 0 0;
+          width: 100%;
+          scrollbar-width: none;
+        }
+
+        .proof-layout .proof-grid::-webkit-scrollbar {
+          display: none;
+        }
+
+        .proof-layout .proof-card {
+          scroll-snap-align: center;
+        }
+
+        .proof-layout .proof-card img {
+          max-height: 320px;
+        }
+
+        #offer {
+          padding-top: 42px;
+          scroll-margin-top: 78px;
+        }
+
+        .offer-box {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .offer-content {
+          order: 1;
+          padding: 22px 20px 18px;
+        }
+
+        .offer-box img {
+          order: 2;
+          min-height: 0;
+          max-height: 210px;
+          object-fit: cover;
+          object-position: center 35%;
+        }
+
+        .offer-content h2 {
+          font-size: clamp(28px, 8vw, 40px);
+          margin-bottom: 12px;
+        }
+
+        .offer-content .price {
+          margin: 14px 0 10px;
+        }
+
+        .offer-content .price strong {
+          font-size: 42px;
+        }
+
+        .offer-content .ticks {
+          margin-bottom: 18px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .brand {
+          font-size: 18px;
+        }
+
+        .nav-cta {
+          min-height: 38px;
+          padding: 0 13px;
+          font-size: 11px;
+        }
+
+        h1 {
+          font-size: 23px;
+        }
+
+        .h1-top {
+          font-size: 16px;
+        }
+
+        .lead {
+          font-size: 17px;
+        }
+
+        .cards,
+        .portrait-stack {
+          grid-template-columns: 1fr;
+        }
+
+        .price strong {
+          font-size: 46px;
+        }
+
+        .footer-inner {
+          display: grid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <nav class="nav" aria-label="Main navigation">
+        <a class="brand" href="#top">Holy Girls <span>AI</span></a>
+        <div class="nav-links">
+          <a href="#top">Holly Girls</a>
+          <a href="#process">как это работает</a>
+          <a href="#gallery">Галерея</a>
+          <a href="#offer">Старт</a>
+        </div>
+        <a class="nav-cta" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">начать курс</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-label="Holy Girls AI">
+        <div class="hero-inner">
+          <p class="eyebrow">AI, КОТОРЫЙ ЗАРАБАТЫВАЕТ</p>
+          <h1><span class="h1-top">Виртуальные девушки</span><span class="h1-main">Реальные деньги.</span></h1>
+          <p class="lead">
+            Первые результаты уже в первый месяц.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#offer">Начать обучение</a>
+            <a class="button secondary" href="#gallery">Посмотреть примеры</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats" aria-label="Project highlights">
+        <div class="stat">
+          <strong>1 день</strong>
+          <span>до первой AI-модели и первых фото</span>
+        </div>
+        <div class="stat">
+          <strong>$500–6800</strong>
+          <span>зарабатывают ученики уже в первый месяц</span>
+        </div>
+        <div class="stat">
+          <strong>Без лица</strong>
+          <span>полностью анонимно и масштабируемо</span>
+        </div>
+      </div>
+
+      <section id="process">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>Как это работает</h2>
+            <p>Не магия. Пошаговая система, которую ты проходишь один раз и потом масштабируешь.</p>
+          </div>
+
+          <div class="steps">
+            <article class="step">
+              <div class="step-number">01</div>
+              <div>
+                <h3>Создание AI-модели</h3>
+                <p>Учишься делать гиперреалистичных цифровых девушек, которые выглядят как живые.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-number">02</div>
+              <div>
+                <h3>Генерация контента</h3>
+                <p>Генерируешь десятки и сотни фото/видео в едином стиле быстро и дёшево.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-number">03</div>
+              <div>
+                <h3>Трафик и рост</h3>
+                <p>Запускаешь модели в соцсети и трафик, привлекаешь целевую аудиторию.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-number">04</div>
+              <div>
+                <h3>Монетизация</h3>
+                <p>Настраиваешь подписки, приватный контент и превращаешь внимание в деньги.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step-number">05</div>
+              <div>
+                <h3>Масштаб и автоматизация</h3>
+                <p>Запускаешь несколько моделей и выходишь на пассивный доход.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-head">
+            <h2>Результаты учеников</h2>
+            <p>Многие начинают зарабатывать уже в первый месяц — даже без опыта.</p>
+          </div>
+          <div class="proof-layout">
+            <figure class="proof-photo" aria-hidden="true"></figure>
+            <div class="proof-grid">
+              <figure class="proof-card">
+                <img src="assets/proof-01.jpg" alt="Доход ученика за первый месяц" />
+                <figcaption>544$ с одного клиента за 2 часа</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-02.jpg" alt="Окупаемость курса" />
+                <figcaption>отзыв ученика из тг</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-03.jpg" alt="Скриншот выплат" />
+                <figcaption>4970$ вывод с fanvue</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-04.jpg" alt="Статистика просмотров" />
+                <figcaption>20M+ просмотров по моделям</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-05.jpg" alt="Рост аудитории" />
+                <figcaption>статистика аккаунта ученика</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-06.jpg" alt="Аналитика охватов" />
+                <figcaption>Стабильный трафик каждый день</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-07.jpg" alt="Платные подписки" />
+                <figcaption>Первые платные фаны</figcaption>
+              </figure>
+              <figure class="proof-card">
+                <img src="assets/proof-08.jpg" alt="Отзыв ученика" />
+                <figcaption>Реальный отзыв ученика</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>AI-модели</h2>
+            <p style="text-align:center; color:#b8aea0; margin-bottom:20px;">
+              Примеры того, какие модели и фото ты будешь создавать уже на первой неделе
+            </p>
+          </div>
+        </div>
+        <div class="model-stage" data-carousel>
+          <div class="model-toolbar">
+            <button class="icon-button" type="button" data-carousel-prev aria-label="Previous model">‹</button>
+            <button class="icon-button" type="button" data-carousel-next aria-label="Next model">›</button>
+          </div>
+          <div class="model-carousel">
+            <figure class="model-card is-active">
+              <img src="assets/lifestyle-01.jpg" alt="AI model mirror portrait" />
+              <figcaption class="model-caption"><span><strong>Mirror set</strong> — то, что ты научишься делать</span><b class="model-chip">01</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-02.jpg" alt="Brunette AI model black dress selfie" />
+              <figcaption class="model-caption"><span><strong>Black dress</strong> — реалистичный стиль</span><b class="model-chip">02</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-17.jpg" alt="AI model bedroom fitness look" />
+              <figcaption class="model-caption"><span><strong>Home fit</strong> — контент в спальне</span><b class="model-chip">03</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-05.jpg" alt="Blonde AI model blue sweater selfie" />
+              <figcaption class="model-caption"><span><strong>Blue sweater</strong> — естественный свет</span><b class="model-chip">04</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-19.jpg" alt="AI model nurse scrubs portrait" />
+              <figcaption class="model-caption"><span><strong>Nurse set</strong> — ролевой контент</span><b class="model-chip">05</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-04.jpg" alt="Brunette AI model pink bedroom look" />
+              <figcaption class="model-caption"><span><strong>Pink room</strong> — мягкий lifestyle</span><b class="model-chip">06</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-18.jpg" alt="AI model gym mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Gym mirror</strong> — фитнес-образ</span><b class="model-chip">07</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-20.jpg" alt="AI model lifestyle portrait" />
+              <figcaption class="model-caption"><span><strong>Soft look</strong> — естественный портрет</span><b class="model-chip">08</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-06.jpg" alt="Brunette AI model fur coat portrait" />
+              <figcaption class="model-caption"><span><strong>Fur mood</strong> — премиальный образ</span><b class="model-chip">09</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-25.jpg" alt="AI model lifestyle selfie" />
+              <figcaption class="model-caption"><span><strong>Creator shot</strong> — контент для профиля</span><b class="model-chip">10</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-07.jpg" alt="AI model western fashion look" />
+              <figcaption class="model-caption"><span><strong>Cowgirl mood</strong> — контент для соцсетей</span><b class="model-chip">11</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-08.jpg" alt="Brunette AI model white outfit portrait" />
+              <figcaption class="model-caption"><span><strong>White fit</strong> — чистый минимализм</span><b class="model-chip">12</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-26.png" alt="AI model camo bikini mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Camo bikini</strong> — mirror selfie</span><b class="model-chip">13</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-09.jpg" alt="Blonde AI model red outfit lifestyle" />
+              <figcaption class="model-caption"><span><strong>Red set</strong> — яркий тизер</span><b class="model-chip">14</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-14.jpg" alt="Brunette AI model window portrait" />
+              <figcaption class="model-caption"><span><strong>Window shot</strong> — естественный портрет</span><b class="model-chip">15</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-24.jpg" alt="AI model fashion portrait" />
+              <figcaption class="model-caption"><span><strong>Fashion cut</strong> — стиль для ленты</span><b class="model-chip">16</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-10.jpg" alt="Brunette AI model tennis outfit" />
+              <figcaption class="model-caption"><span><strong>Court set</strong> — спортивный стиль</span><b class="model-chip">17</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-21.jpg" alt="AI model police uniform mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Police mood</strong> — костюмный сет</span><b class="model-chip">18</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-31.jpg" alt="AI model lifestyle portrait" />
+              <figcaption class="model-caption"><span><strong>Daylight</strong> — мягкий свет</span><b class="model-chip">19</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-11.jpg" alt="AI model western portrait" />
+              <figcaption class="model-caption"><span><strong>Boots edit</strong> — fashion-образ</span><b class="model-chip">20</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-12.jpg" alt="Brunette AI model smartphone selfie" />
+              <figcaption class="model-caption"><span><strong>Studio selfie</strong> — контент для рилсов</span><b class="model-chip">21</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-28.jpg" alt="AI model casual portrait" />
+              <figcaption class="model-caption"><span><strong>Casual mood</strong> — лёгкий lifestyle</span><b class="model-chip">22</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-13.jpg" alt="Blonde AI model casual grey outfit" />
+              <figcaption class="model-caption"><span><strong>Soft grey</strong> — ежедневные stories</span><b class="model-chip">23</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-16.jpg" alt="Brunette AI model cafe portrait" />
+              <figcaption class="model-caption"><span><strong>Blue top</strong> — lifestyle в кафе</span><b class="model-chip">24</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-33.jpg" alt="AI model close portrait" />
+              <figcaption class="model-caption"><span><strong>Close shot</strong> — акцент на лице</span><b class="model-chip">25</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-15.jpg" alt="AI model studio body portrait" />
+              <figcaption class="model-caption"><span><strong>Studio set</strong> — профиль создателя</span><b class="model-chip">26</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-32.jpg" alt="AI model mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Fresh selfie</strong> — контент для stories</span><b class="model-chip">27</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-22.jpg" alt="AI model casual mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Mirror vibe</strong> — daily контент</span><b class="model-chip">28</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-23.jpg" alt="AI model studio portrait" />
+              <figcaption class="model-caption"><span><strong>Studio light</strong> — чистый кадр</span><b class="model-chip">29</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-27.png" alt="AI model floral bikini mirror selfie" />
+              <figcaption class="model-caption"><span><strong>Floral set</strong> — bathroom mirror</span><b class="model-chip">30</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-29.jpg" alt="AI model outdoor jeep portrait" />
+              <figcaption class="model-caption"><span><strong>Jeep outdoor</strong> — лесной кадр</span><b class="model-chip">31</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-30.jpg" alt="AI model bedroom lingerie portrait" />
+              <figcaption class="model-caption"><span><strong>Bedroom set</strong> — премиум контент</span><b class="model-chip">32</b></figcaption>
+            </figure>
+            <figure class="model-card">
+              <img src="assets/lifestyle-34.jpg" alt="AI model rooftop pool bikini portrait" />
+              <figcaption class="model-caption"><span><strong>Rooftop pool</strong> — ночной lifestyle</span><b class="model-chip">33</b></figcaption>
+            </figure>
+          </div>
+          <div class="model-dots" aria-label="Model carousel pagination"></div>
+          </div>
+      </section>
+
+      <section id="offer" class="offer">
+        <div class="wrap">
+          <div class="offer-box">
+            <img src="assets/offer.jpg" alt="Пример результата ученика" />
+            <div class="offer-content">
+              <p class="eyebrow">ОБУЧАЮЩИЙ КУРС</p>
+              <h2>AI, который зарабатывает</h2>
+              <div class="price">
+                <strong>350$</strong>
+                <s>550$</s>
+              </div>
+              <p class="price-note">330$ при оплате USDT</p>
+              <ul class="ticks">
+                <li>Более 20 уроков, обновлённых в июле 2026 года</li>
+                <li>промты для seedance 2.0 связка с Nano Banana</li>
+                <li>Инструкции по генерации контента и автоматизации</li>
+                <li>Стратегии трафика и монетизации без своего лица</li>
+                <li>Доступ к закрытому чату учеников и обновлениям</li>
+              </ul>
+              <p style="color:#b8aea0; font-size:13px; margin-bottom:24px;">
+                Окупается уже за 1–2 недели при первых продажах
+              </p>
+              <div class="offer-actions">
+                <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">купить и начать</a>
+                <a class="button secondary" href="#faq">Задать вопрос</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>FAQ</h2>
+          </div>
+          <div class="faq">
+            <details>
+              <summary>Нужно ли иметь опыт?</summary>
+              <div class="faq-body">Нет. Курс сделан так, что с нуля можно выйти на первые деньги уже в первый месяц.</div>
+            </details>
+            <details>
+              <summary>Сколько времени нужно в день?</summary>
+              <div class="faq-body">На старте 1–2 часа в день. Дальше можно автоматизировать и тратить меньше.</div>
+            </details>
+            <details>
+              <summary>Это легально?</summary>
+              <div class="faq-body">Да. Полностью синтетический контент. Мы работаем в рамках правил платформ.</div>
+            </details>
+            <details>
+              <summary>Что будет после оплаты?</summary>
+              <div class="faq-body">Сразу доступ к материалам + приглашение в закрытый чат. Старт можно начать в тот же день.</div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="final">
+        <div class="wrap">
+          <h2>ГОТОВ ПРОДАТЬ ПЕРВОЕ ФОТО СВОЕЙ МОДЕЛИ?</h2>
+          <div class="hero-actions">
+            <a class="button" href="https://t.me/+WkC7_nSvEV83ZTIy" target="_blank" rel="noreferrer">Перейти в TELEGRAM</a>
+            <a class="button" data-telegram-bot href="https://t.me/aiholygirlsbot" target="_blank" rel="noreferrer">перейти в бот</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Holy Girls AI - demo landing page</span>
+        <span>Telegram / Support / Email</span>
+      </div>
+    </footer>
+    <script>
+      const TELEGRAM_BOT_URL = "https://t.me/aiholygirlsbot";
+      document.querySelectorAll("[data-telegram-bot]").forEach((button) => {
+        button.href = TELEGRAM_BOT_URL;
+      });
+
+      const stage = document.querySelector("[data-carousel]");
+      if (stage) {
+        const track = stage.querySelector(".model-carousel");
+        const cards = [...stage.querySelectorAll(".model-card")];
+        const dotsWrap = stage.querySelector(".model-dots");
+        const prev = stage.querySelector("[data-carousel-prev]");
+        const next = stage.querySelector("[data-carousel-next]");
+        const count = cards.length;
+        let activeIndex = 0;
+        const isMobileCarousel = () => window.matchMedia("(max-width: 860px)").matches;
+
+        cards.forEach((card, index) => {
+          card.dataset.index = index;
+          card.addEventListener("click", (event) => {
+            if (track.dataset.dragged === "true") return;
+            event.stopPropagation();
+            setActive(index);
+          });
+
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "model-dot";
+          dot.setAttribute("aria-label", `Show model ${index + 1}`);
+          dot.addEventListener("click", () => setActive(index));
+          dotsWrap.appendChild(dot);
+        });
+
+        const dots = [...dotsWrap.querySelectorAll(".model-dot")];
+
+        const circularOffset = (index) => {
+          let offset = index - activeIndex;
+          if (offset > count / 2) offset -= count;
+          if (offset < -count / 2) offset += count;
+          return offset;
+        };
+
+        const updateMobileActive = (index) => {
+          activeIndex = (index + count) % count;
+          cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === activeIndex));
+          dots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === activeIndex));
+        };
+
+        const centerMobileCard = (index) => {
+          updateMobileActive(index);
+          const card = cards[activeIndex];
+          const offset = card.offsetLeft - (track.clientWidth - card.clientWidth) / 2;
+          track.scrollTo({ left: offset, behavior: "smooth" });
+        };
+
+        const setActive = (index) => {
+          activeIndex = (index + count) % count;
+          if (isMobileCarousel()) {
+            centerMobileCard(activeIndex);
+            return;
+          }
+
+          const computed = getComputedStyle(track);
+          const orbitX = Number.parseFloat(computed.getPropertyValue("--orbit-x")) || 0.45;
+          const orbitY = Number.parseFloat(computed.getPropertyValue("--orbit-y")) || 0.16;
+          const orbitYOffset = Number.parseFloat(computed.getPropertyValue("--orbit-y-offset")) || 48;
+
+          cards.forEach((card, cardIndex) => {
+            const offset = circularOffset(cardIndex);
+            const distance = Math.abs(offset);
+            const side = Math.sign(offset);
+            const visible = true;
+            const angle = (offset / count) * Math.PI * 2;
+            const radiusX = Math.min(track.clientWidth * orbitX, 840);
+            const radiusY = Math.min(track.clientHeight * orbitY, 125);
+            const depth = (1 - Math.cos(angle)) / 2;
+            const x = Math.sin(angle) * radiusX;
+            const y = Math.cos(angle) * radiusY + orbitYOffset;
+            const z = -depth * 390;
+            const rotate = Math.sin(angle) * 68;
+            const scale = 1 - depth * 0.26;
+            const opacity = Math.max(0.24, 1 - depth * 0.5);
+            const brightness = Math.max(0.34, 1 - depth * 0.42);
+            const zIndex = Math.round(200 - depth * 120);
+
+            card.classList.toggle("is-active", distance === 0);
+            card.style.setProperty("--x", `${x}px`);
+            card.style.setProperty("--y", `${y}px`);
+            card.style.setProperty("--z", `${z}px`);
+            card.style.setProperty("--r", `${rotate}deg`);
+            card.style.setProperty("--s", scale.toFixed(3));
+            card.style.setProperty("--o", opacity.toFixed(3));
+            card.style.setProperty("--b", brightness.toFixed(3));
+            card.style.setProperty("--zi", zIndex);
+            card.style.setProperty("--pe", visible ? "auto" : "none");
+          });
+
+          dots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === activeIndex));
+        };
+
+        prev.addEventListener("click", () => setActive(activeIndex - 1));
+        next.addEventListener("click", () => setActive(activeIndex + 1));
+        track.addEventListener("scroll", () => {
+          if (!isMobileCarousel()) return;
+          window.clearTimeout(track._mobileSnapTimer);
+          track._mobileSnapTimer = window.setTimeout(() => {
+            const trackRect = track.getBoundingClientRect();
+            const center = trackRect.left + trackRect.width / 2;
+            const closest = cards.reduce((best, card, index) => {
+              const rect = card.getBoundingClientRect();
+              const distance = Math.abs(rect.left + rect.width / 2 - center);
+              return distance < best.distance ? { index, distance } : best;
+            }, { index: activeIndex, distance: Infinity }).index;
+            updateMobileActive(closest);
+          }, 90);
+        });
+
+        let startX = 0;
+        let startY = 0;
+        track.addEventListener("pointerdown", (event) => {
+          if (isMobileCarousel()) return;
+          startX = event.clientX;
+          startY = event.clientY;
+          track.dataset.dragged = "false";
+          track.setPointerCapture(event.pointerId);
+        });
+        track.addEventListener("pointermove", (event) => {
+          if (isMobileCarousel()) return;
+          if (Math.abs(event.clientX - startX) > 8 || Math.abs(event.clientY - startY) > 8) {
+            track.dataset.dragged = "true";
+          }
+        });
+        track.addEventListener("pointerup", (event) => {
+          if (isMobileCarousel()) return;
+          const delta = event.clientX - startX;
+          if (Math.abs(delta) > 40) setActive(activeIndex + (delta < 0 ? 1 : -1));
+          requestAnimationFrame(() => {
+            track.dataset.dragged = "false";
+          });
+        });
+
+        if (isMobileCarousel()) {
+          updateMobileActive(0);
+        } else {
+          setActive(0);
+        }
+        window.addEventListener("resize", () => setActive(activeIndex));
+      }
+    </script>
+  </body>
+</html>
