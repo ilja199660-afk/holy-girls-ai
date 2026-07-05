@@ -840,46 +840,15 @@
         }
 
         .model-carousel {
-          --card-w: min(72vw, 280px);
-          display: grid;
-          grid-auto-flow: column;
-          grid-auto-columns: var(--card-w);
-          gap: 16px;
-          height: auto;
-          min-height: 430px;
-          left: 50%;
-          width: 100vw;
-          transform: translateX(-50%);
-          overflow-x: auto;
-          overflow-y: visible;
-          scroll-snap-type: x mandatory;
-          scroll-padding-inline: 14vw;
-          padding: 8px 14vw 18px;
-          perspective: none;
-          scrollbar-width: none;
-        }
-
-        .model-carousel::-webkit-scrollbar {
-          display: none;
+          --card-w: min(62vw, 250px);
+          --orbit-x: 0.36;
+          --orbit-y: 0.14;
+          --orbit-y-offset: 36px;
+          height: clamp(440px, 78vw, 560px);
         }
 
         .model-card {
-          position: relative;
-          left: auto;
-          top: auto;
-          width: var(--card-w);
-          height: min(96vw, 430px);
-          transform: none !important;
-          opacity: 1 !important;
-          filter: brightness(0.72);
-          z-index: auto !important;
-          pointer-events: auto !important;
-          scroll-snap-align: center;
-          flex: 0 0 auto;
-        }
-
-        .model-card.is-active {
-          filter: brightness(1);
+          height: clamp(280px, 68vw, 420px);
         }
 
         .model-stage {
@@ -908,7 +877,7 @@
         }
 
         .proof-layout {
-          height: clamp(340px, 54vw, 420px);
+          height: clamp(400px, 92vw, 480px);
           min-height: 0;
           margin-left: 0;
           margin-right: 0;
@@ -918,12 +887,9 @@
 
         .proof-photo {
           position: absolute;
-          inset: 0;
-          top: 0;
+          inset: 0 auto 0 0;
           left: 0;
-          right: 0;
-          bottom: 0;
-          width: 100%;
+          width: 44%;
           min-height: 0;
           z-index: 1;
           pointer-events: none;
@@ -935,28 +901,29 @@
 
         .proof-photo::before {
           background:
-            linear-gradient(0deg, rgba(7, 7, 7, 0.82) 0%, rgba(7, 7, 7, 0.42) 38%, rgba(7, 7, 7, 0.12) 72%),
-            linear-gradient(90deg, rgba(7, 7, 7, 0.35) 0%, rgba(7, 7, 7, 0) 42%, rgba(7, 7, 7, 0.45) 100%),
-            url("assets/proof-hero.jpg") center 28% / cover no-repeat,
+            linear-gradient(90deg, rgba(7, 7, 7, 0) 0%, rgba(7, 7, 7, 0.12) 52%, rgba(7, 7, 7, 0.72) 82%, #070707 100%),
+            url("assets/proof-hero.jpg") center top / 100% auto no-repeat,
             #070707;
         }
 
         .proof-layout .proof-grid {
           position: absolute;
-          left: 0;
+          top: 0;
           right: 0;
           bottom: 0;
+          left: 36%;
           z-index: 2;
           display: grid;
           grid-auto-flow: column;
-          grid-auto-columns: min(68vw, 280px);
+          grid-auto-columns: min(74vw, 300px);
           grid-template-columns: none;
+          align-items: center;
           gap: 12px;
           overflow-x: auto;
           scroll-snap-type: x mandatory;
-          padding: 0 16px 16px;
+          padding: 12px 12px 12px 0;
           margin: 0;
-          width: 100%;
+          width: auto;
           scrollbar-width: none;
         }
 
@@ -971,7 +938,7 @@
         }
 
         .proof-layout .proof-card img {
-          max-height: 200px;
+          max-height: min(72vw, 340px);
         }
 
         #offer {
@@ -985,16 +952,19 @@
         .offer-box {
           display: flex;
           flex-direction: column;
+          gap: 0;
         }
 
         .offer-box img {
           order: 2;
           display: block;
           width: 100%;
+          height: auto;
           min-height: 0;
-          max-height: 220px;
-          object-fit: cover;
-          object-position: center top;
+          max-height: none;
+          object-fit: contain;
+          object-position: center;
+          background: #0a0908;
         }
 
         .offer-content {
@@ -1463,8 +1433,6 @@
         const next = stage.querySelector("[data-carousel-next]");
         const count = cards.length;
         let activeIndex = 0;
-        const isMobileCarousel = () => window.matchMedia("(max-width: 860px)").matches;
-
         cards.forEach((card, index) => {
           card.dataset.index = index;
           card.addEventListener("click", (event) => {
@@ -1490,25 +1458,8 @@
           return offset;
         };
 
-        const updateMobileActive = (index) => {
-          activeIndex = (index + count) % count;
-          cards.forEach((card, cardIndex) => card.classList.toggle("is-active", cardIndex === activeIndex));
-          dots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === activeIndex));
-        };
-
-        const centerMobileCard = (index) => {
-          updateMobileActive(index);
-          const card = cards[activeIndex];
-          const offset = card.offsetLeft - (track.clientWidth - card.clientWidth) / 2;
-          track.scrollTo({ left: offset, behavior: "smooth" });
-        };
-
         const setActive = (index) => {
           activeIndex = (index + count) % count;
-          if (isMobileCarousel()) {
-            centerMobileCard(activeIndex);
-            return;
-          }
 
           const computed = getComputedStyle(track);
           const orbitX = Number.parseFloat(computed.getPropertyValue("--orbit-x")) || 0.45;
@@ -1550,38 +1501,21 @@
 
         prev.addEventListener("click", () => setActive(activeIndex - 1));
         next.addEventListener("click", () => setActive(activeIndex + 1));
-        track.addEventListener("scroll", () => {
-          if (!isMobileCarousel()) return;
-          window.clearTimeout(track._mobileSnapTimer);
-          track._mobileSnapTimer = window.setTimeout(() => {
-            const trackRect = track.getBoundingClientRect();
-            const center = trackRect.left + trackRect.width / 2;
-            const closest = cards.reduce((best, card, index) => {
-              const rect = card.getBoundingClientRect();
-              const distance = Math.abs(rect.left + rect.width / 2 - center);
-              return distance < best.distance ? { index, distance } : best;
-            }, { index: activeIndex, distance: Infinity }).index;
-            updateMobileActive(closest);
-          }, 90);
-        });
 
         let startX = 0;
         let startY = 0;
         track.addEventListener("pointerdown", (event) => {
-          if (isMobileCarousel()) return;
           startX = event.clientX;
           startY = event.clientY;
           track.dataset.dragged = "false";
           track.setPointerCapture(event.pointerId);
         });
         track.addEventListener("pointermove", (event) => {
-          if (isMobileCarousel()) return;
           if (Math.abs(event.clientX - startX) > 8 || Math.abs(event.clientY - startY) > 8) {
             track.dataset.dragged = "true";
           }
         });
         track.addEventListener("pointerup", (event) => {
-          if (isMobileCarousel()) return;
           const delta = event.clientX - startX;
           if (Math.abs(delta) > 40) setActive(activeIndex + (delta < 0 ? 1 : -1));
           requestAnimationFrame(() => {
@@ -1589,11 +1523,7 @@
           });
         });
 
-        if (isMobileCarousel()) {
-          updateMobileActive(0);
-        } else {
-          setActive(0);
-        }
+        setActive(0);
         window.addEventListener("resize", () => setActive(activeIndex));
       }
     </script>
